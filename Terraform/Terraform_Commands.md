@@ -1,0 +1,46 @@
+# Commandes Terraform
+
+### Terraform init
+``` terraform init ```
+* Initialise le projet avec les informations du provider utilisé dans les scripts
+* Paramètres
+    * -backend-config=<file>: permet de passer une configuration partielle de backend
+* Configure les backends, installe les providers et télécharge les modules
+
+### Terraform plan
+``` terraform plan ```
+* Lance un dry-run des scripts
+
+### Terraform apply
+``` terraform apply ```
+* Applique les scripts
+
+### Terraform graph
+``` terraform graph ```
+* Display dependency graph of deployment
+
+### Terraform destroy
+``` terraform destroy ```
+* Clean up everything in the script
+
+### Terraform workspace
+``` terraform workspace ```
+* Permet de basculer entre workspaces
+
+``` terraform workspace show ```
+* Permet de voir le workspace courant
+
+``` terraform workspace new <workspace_name> ```
+* Créer un workspace
+
+``` terraform workspace list ```
+* Liste les workspaces
+
+``` terraform workspace select <workspace_name> ```
+* Bascule sur le workspace workspace_name
+
+### Terraform console
+``` terraform console ```
+* Permet de tester des fonction
+* Récupérer l'état des infra
+* En lecture seule
