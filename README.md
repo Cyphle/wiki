@@ -1,7 +1,10 @@
 # Wiki
 
-Ce wiki contient des notes concernant des outils et des technos et des cheat sheets
+Ce wiki contient des notes sur certaines technologies ainsi que quelques principes d'industrialisation lors de la mise en place de projets web en milieu professionnel.
 
+# [Industrialisation](https://github.com/Cyphle/wiki/blob/main/Industrialisation/Industrialisation.md)
+
+* [Ressources RH](https://github.com/Cyphle/wiki/blob/main/Industrialisation/Industrialisation_RessourcesRH.md)
 Considérations de développement d'une application web
 * Recrutement
 * Technologies
@@ -11,7 +14,7 @@ Considérations de développement d'une application web
 * Securité
 * PRA, PCA
 
-# [AWS](https://github.com/Cyphle/wiki/blob/main/AWS/AWS.)
+# [AWS](https://github.com/Cyphle/wiki/blob/main/AWS/AWS.md)
 
 Account
 * [Budget](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Budget.md)
