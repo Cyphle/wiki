@@ -84,3 +84,19 @@ module "users" {
 
 %{for <INDEX>, <ITEM> in <COLLECTION>}<BODY>%{endfor}
 ```
+
+## Loops limitations
+* Cannot reference outputs in count or for_each but can reference data, variables, lists of resources. Example:
+```
+resource "random_integer" "num_instances" {
+  min = 1
+  max = 3
+}
+
+resource "aws_instance" "example_3" {
+  # This won't work because it cannot determine value before execution
+  count = random_integer.num_instances.result
+  ami = "ami-xxx"
+  instance_type = "t2.micro"
+}
+```

@@ -105,6 +105,7 @@ Messaging
 * [Modules](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform_Modules.md)
 * [Loops](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform_Loops.md)
 * [Conditionals](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform_Conditionals.md)
+* [Zero Downtime Deployment](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform_ZeroDowntimeDeployment.md)
 
 
 # Kubernetes
