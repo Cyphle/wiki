@@ -5,7 +5,6 @@ Ce wiki contient des notes sur certaines technologies ainsi que quelques princip
 # [Industrialisation](https://github.com/Cyphle/wiki/blob/main/Industrialisation/Industrialisation.md)
 
 * [Ressources RH](https://github.com/Cyphle/wiki/blob/main/Industrialisation/Industrialisation_RessourcesRH.md)
-Considérations de développement d'une application web
 * Recrutement
 * Technologies
 * Architecture plateforme
@@ -106,6 +105,7 @@ Messaging
 * [Loops](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform_Loops.md)
 * [Conditionals](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform_Conditionals.md)
 * [Zero Downtime Deployment](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform_ZeroDowntimeDeployment.md)
+* [Secrets](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform_Secrets.md)
 
 
 # Kubernetes
