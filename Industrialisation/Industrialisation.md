@@ -8,3 +8,4 @@ Lors de la mise en place d'un projet web, comme pour tout autre projet informati
 * La sécurité
 * Les usines logicielles
 * Le monitoring et observabilité
+* La résilience (PCA, PRA, ...)

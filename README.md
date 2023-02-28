@@ -5,14 +5,8 @@ Ce wiki contient des notes sur certaines technologies ainsi que quelques princip
 # [Industrialisation](https://github.com/Cyphle/wiki/blob/main/Industrialisation/Industrialisation.md)
 
 * [Ressources RH](https://github.com/Cyphle/wiki/blob/main/Industrialisation/Industrialisation_RessourcesRH.md)
-Considérations de développement d'une application web
-* Recrutement
-* Technologies
-* Architecture plateforme
-* Architecture logiciel
-* Industrialisation
-* Securité
-* PRA, PCA
+* [Flux de travail](https://github.com/Cyphle/wiki/blob/main/Industrialisation/Industrialisation_FluxTravail.md)
+
 
 # [AWS](https://github.com/Cyphle/wiki/blob/main/AWS/AWS.md)
 

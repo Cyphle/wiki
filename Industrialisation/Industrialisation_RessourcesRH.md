@@ -45,3 +45,17 @@ Le choix des profils a chacun ses avantages :
 Il est également important de savoir comment créer une cohésion ainsi qu'une cohérence de l'équipe en offrant par exemple un environnement technique challengeant ou tout le monde pourra évoluer et faire évoluer les autres. Actuellement, un des facteurs qui permet ceci est le Software Craftsmanship.
 
 #### SRE
+Les SRE (ou DevOps dans le language courant) ont un rôle primordial. Il ne s'agit plus des classique administrateurs systèmes proposant un service de serveurs et de déploiement. Ils doivent faire parti intégrante de l'équipe. L'automatisation des tâches est leur rôle principal. Cela inclue :
+* La mise en place d'un outil de CI/CD (les pipelines de déploiments doivent être fait en collaboration avec les développeurs)
+* La mise en place d'outils de monitoring infrastructure et applicatif
+* Les outils d'automatisation comme Terraform, Helm, etc
+
+Ils ont également un rôle important dans la sécurité en mettant en place les outils nécessaires ainsi que certaines politiques d'accès.
+
+A noter qu'avec le développement des cloud providers comme AWS et Azure, le démarquage entre SRE et développeurs est plus flou et les deux rôles doivent travailler en étroite collaboration.
+
+## Considération de mindset
+* Il faut éviter les héros. Bien entendu, il est important de savoir s'entourer d'experts dans certaines technologies mais créer des silos est toujours sujet à créer des SPOF (Single Point of Failure).
+* Il est également important de savoir créer une ambiance d'équipe où tout le monde peut s'entraider et évoluer ensemble.
+    * D'une part cela permet de challenger en permanence ce qui est en place et de faire évoluer les produits dans une meilleure direction
+    * D'autre part cela permet de motiver d'avantage les techniciens
