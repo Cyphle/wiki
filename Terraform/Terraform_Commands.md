@@ -44,3 +44,17 @@
 * Permet de tester des fonction
 * Récupérer l'état des infra
 * En lecture seule
+
+### Terraform import
+``` terraform import <address> <resource_id> ````
+* Import les infos d'une infrastructure déjà existante dans le fichier state
+* address: `<PROVIDER>_<TYPE>.<NAME>` (ex: aws_iam_user.existing_user)
+* resource_id (ex: foo.bar)
+* Alternative tools: terraformer et terracognita
+
+### Move state file
+``` terraform state mv <ORIGINAL_REFERENCE> <NEW_REFERENCE> ```
+* Déplace un state en modifiant une ressource
+* Cela permet de par exemple renommer une resource sans avoir à redeployer.
+    * Example `terraform state mv aws_security_group.instance aws_security_group.cluster_instance`
+

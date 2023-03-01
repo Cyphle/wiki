@@ -6,6 +6,13 @@ Ce wiki contient des notes sur certaines technologies ainsi que quelques princip
 
 * [Ressources RH](https://github.com/Cyphle/wiki/blob/main/Industrialisation/Industrialisation_RessourcesRH.md)
 * [Flux de travail](https://github.com/Cyphle/wiki/blob/main/Industrialisation/Industrialisation_FluxTravail.md)
+* Recrutement
+* Technologies
+* Architecture plateforme
+* Architecture logiciel
+* Industrialisation
+* Securité
+* PRA, PCA
 
 
 # [AWS](https://github.com/Cyphle/wiki/blob/main/AWS/AWS.md)
@@ -99,6 +106,8 @@ Messaging
 * [Modules](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform_Modules.md)
 * [Loops](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform_Loops.md)
 * [Conditionals](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform_Conditionals.md)
+* [Zero Downtime Deployment](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform_ZeroDowntimeDeployment.md)
+* [Secrets](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform_Secrets.md)
 
 
 # Kubernetes

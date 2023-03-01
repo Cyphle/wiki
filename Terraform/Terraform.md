@@ -47,3 +47,12 @@ output "for_directive_index_if" {
     EOF
 }
 ```
+* Parfois, même si `terraform plan` fonctionne, le déploiement peut échouer. Cela est dû au fait que terraform ne regarde que les ressources définies dans ses fichiers et non l'existant déjà présent.
+* Afin de notifier à Terraform que quelque chose à changer, il est possible de noter des `moved` block
+```
+moved {
+    from = aws_security_group.instance
+    to = aws_security_group.cluster_instance
+}
+```
+* De nombreux paramètres de ressources sont immutables. Cela signifie que s'ils changent, Terraform va détruire la ressource pour en recréer une.
