@@ -6,11 +6,11 @@ Ce wiki contient des notes sur certaines technologies ainsi que quelques princip
 
 * [Ressources RH](https://github.com/Cyphle/wiki/blob/main/Industrialisation/Industrialisation_RessourcesRH.md)
 * [Flux de travail](https://github.com/Cyphle/wiki/blob/main/Industrialisation/Industrialisation_FluxTravail.md)
-* Recrutement
-* Technologies
+* [Recrutement](https://github.com/Cyphle/wiki/blob/main/Industrialisation/Industrialisation_Recrutement.md)
+* [Technologies](https://github.com/Cyphle/wiki/blob/main/Industrialisation/Industrialisation_Technologies.md)
 * Architecture plateforme
 * Architecture logiciel
-* Industrialisation
+* Industrialisation (étudier une technologie et la déployer en prod avant de l'utiliser)
 * Securité
 * PRA, PCA
 
