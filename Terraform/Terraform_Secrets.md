@@ -158,3 +158,157 @@ variable "allowed_repos_branches" {
     # ]
 }
 ```
+
+## Ressources et Data Sources
+* Pour passer des variables
+    * Environment variables
+    * Encrypted files
+    * Secret stores
+
+### Environment variables
+* Utiliser des variables
+```
+variable "db_username" {
+    description = "The user for the database"
+    type = string
+    sensitive = true
+}
+
+variable "db_password" {
+    description = "The password for the database"
+    type = string
+    sensitive = true
+}
+```
+* Le `sensitive = true` indique qu'il s'agit de secrets et Terraform ne le printera pas. 
+* Pour les utiliser, déclarer les variables
+```
+export TF_VAR_db_username=...
+export TF_VAR_db_password=...
+```
+
+### Encrypted files
+* Mettre les infos dans un texte, le chiffrer et le stocker quelque part (S3, version control, ...)
+* Mettre la clé de chiffrement dans un outil comme KMS ou utiliser les clés Github des développeurs par exemple
+* Pour chiffrer et déchiffrer des fichiers de manière "transparente", il est possible d'utiliser des outils comme sops
+
+#### Exemple d'utilisation de KMS en créant une CMK (Customer Managed Key)
+1. Création de la clé KMS
+```
+provider "aws" {
+    region = "us-east-2"
+}
+
+# Donne des informations sur le user courant
+data "aws_caller_identify" "self" {}
+
+# Donne au user courant les droits d'admin sur la CMK
+data "aws_iam_policy_document" "cmk_admin_policy" {
+    statement {
+        effect = "Allow"
+        resources = ["*"]
+        actions = ["kms:*"]
+        principals {
+            type = "AWS"
+            identifiers = [data.aws_caller_identity.self.arn]
+        }
+    }
+}
+
+# Créer la CMK
+resource "aws_kms_key" "cmk" {
+    policy = data.aws_iam_policy_document.cmk_admin_policy.json
+}
+
+# Alias pour la clé
+resource "aws_kms_alias" "cmk" {
+    name = "alias/kms-cmk-example"
+    target_key_id = aws_kms_key.cmk.id
+}
+```
+2. Craétion du fichier chiffré
+```
+FILE (db-creds.yml):
+username: admin
+password: password
+
+BASH TO ECNRYPT (encrypt.sh):
+#!/bin/bash
+
+CMK_ID="$1"
+AWS_REGION="$2"
+INPUT_FILE="$3"
+OUTPUT_FILE="$4"
+
+echo "Encrypting contents of $INPUT_FILE using CMK $CMK_ID..."
+ciphertext=$(aws kms encrypt \
+    --key-id "$CMK_ID" \
+    --region "$AWS_REGION" \
+    --plaintext "fileb://$INPUT_FILE" \
+    --output text \
+    --query CiphertextBlob)
+
+echo "Writing result to $OUTPUT_FILE..."
+echo "$ciphertext" > "$OUTPUT_FILE"
+
+echo "Done!"
+
+BASH USE:
+./encrypt.sh alias/kms-cmk-example us-east-2 db-creds.yml db-creds.yml.encrypted
+```
+3. Récupérer les secrets dans Terraform
+```
+data "aws_kms_secrets" "creds" {
+    secret {
+        name = "db"
+        payload = file("${path.module}/db-creds.yml.encrypted")
+    }
+}
+
+locals {
+    db_creds = yamldecode(data.aws_kms_secrets.creds.plaintext["db"])
+}
+
+resource "aws_db_instance" "example" {
+    identifier_prefix = "terraform-up-and-running"
+    engine = "mysql"
+    allocated_storage = 10
+    instance_class = "db.t2.micro"
+    skip_final_snapshot = true
+    db_name = var.db_name
+
+    username = local.db_creds.username
+    password = local.db_creds.password
+}
+```
+
+### Secret stores
+* Exemples de secret stores : AWS Secrets Manager, Google Secret Manager, Azure Key Vault, Hashicorp Vault
+* Pour utiliser AWS Secret Manager dans Terraform
+```
+# Récupérer un secret enregistré dans Secret Manager
+data "aws_secretsmanager_secret_version" "creds" {
+    secret_id = "db-creds"
+}
+
+locals {
+    db_creds = jsondecode(data.aws_secrets_manager_secret_version.creds.secret_string)
+}
+```
+
+## State files and Plan files
+
+### State files
+* ATTENTION : tous les secrets utilisés dans les ressources et data sources Terraform sont stockés en clair dans les state files.
+* Pour parer à cette contrainte Terraform
+    * Stocker les fichiers state dans un backend qui supporte le chiffrement (comme S3)
+    * Mettre une policy stricte sur qui a accès au backend
+
+### Plan files
+* Avec la commande plan, il est possible de stocker la diff dans un fichier avec `terraform plan -out=example.plan`
+* Il est alors possible d'appliquer strictement la diff avec `terraform apply example.plan`
+* Les secrets sont en clairs dans les fichiers plans
+* Pour utiliser les fichiers plan
+    * Chiffrer les fichiers plan
+    * Mettre une policy stricte sur qui a accès à ces fichiers
+    
