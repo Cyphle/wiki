@@ -52,3 +52,19 @@ resource "xxx" "yyy" {
 }
 ```
 * Dans les modules, préférer utiliser des resources séparées que des inline blocks sinon cela créer des conflits si on veut override et le template ne compilera pas
+
+## Recherche d'AMI
+* Les ressources AWS permettent de rechercher une AMI afin d'obtenir son ID
+```
+data "aws_ami" "ubuntu_region_1" {
+  provider = aws.region_1
+
+  most_recent = true
+  downers = ["099720109477"]
+
+  filter {
+    name = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+}
+```
