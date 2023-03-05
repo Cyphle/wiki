@@ -1,0 +1,3 @@
+# What is GuardDuty ?
+
+* Intelligent threat detection for accounts, instances, containers, ...

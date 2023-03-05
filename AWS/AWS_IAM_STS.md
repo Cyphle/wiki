@@ -43,6 +43,7 @@
 	* Roles can only be passed to what their trust allows
 		* A trust policy for the role that allows the service to assume the role
 		* Target service needs to assume the role to use the source service
+* Assuming a role involves using a set of temporary security credentials that you can use to access AWS resources that you might not normally have access to. These temporary credentials consist of an access key ID, a secret access key, and a security token. Typically, you assume a role within your account or for cross-account access.
 
 # STS
 * STS : Security Token Service

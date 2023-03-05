@@ -41,3 +41,7 @@ module.<MODULE_NAME>.<OUTPUT_NAME>
 ## Authentication
 
 * Terraform will automatically use SSH key if some modules are in Github
+
+## Types de modules
+* Reusable : not meant to be deployed separately but combined with others
+* Root modules : high level modules that combine multiple reusable modules

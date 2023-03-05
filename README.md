@@ -21,6 +21,7 @@ Account
 * [Budget](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Budget.md)
 * [Security Groups](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_SecurityGroups.md)
 * [Quotas](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Quotas.md)
+* [Organization](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Organization.md)
 
 Security
 * [IAM & STS](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_IAM_STS.md)
@@ -31,6 +32,8 @@ Security
 * [Secret Manager](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_SecretManager.md)
 * [ACM - Amazon Certificate Manager](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_ACM.md)
 * [Other security](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_OtherSecurity.md)
+* [GuardDuty](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_GuardDuty.md)
+* [Shiekd](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Shield.md)
 
 Réseau
 * [Route 53](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Route53.md)
@@ -61,6 +64,8 @@ Développement
 * [OpenSearch](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_OpenSearch.md)
 * [Athena](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Athena.md)
 * [AppConfig](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_AppConfig.md)
+* [RedShift](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_RedShift.md)
+* [Glue](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Glue.md)
 
 Container
 * [ECS - Elastic Container Service](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_ECS.md)
