@@ -15,3 +15,4 @@
 * `file` pour lire un fichier
 * `yamldecode` pour transformer du text en yaml
 * `jsondecode` pour transformer du text en json
+* `try(ARG1, ARG2, ..., ARGN)` evaluates all args and return first one without error

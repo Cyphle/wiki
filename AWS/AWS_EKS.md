@@ -25,3 +25,7 @@ Service managé Kubernetes.
         * EFS (Fargate uses this only)
         * FSx for Lustre
         * FSx for NetApp ONTAP
+* Pour update le kubeconfig avec les infos d'un cluster Kubernetes
+```
+aws eks update-kubeconfig --region <REGION> --name <EKS_CLUSTER_NAME>
+```

@@ -165,3 +165,7 @@ terraform {
     }
 }
 ```
+
+## Multiple different providers
+* Il est rare de gérer plusieurs providers dans le même module et c'est une mauvaise pratique
+* Il est possible de définir plusieurs providers différents pour avoir toutes les ressources comme un provider aws et un provider kubernetes
