@@ -5,6 +5,7 @@
 * Initialise le projet avec les informations du provider utilisé dans les scripts
 * Paramètres
     * -backend-config=<file>: permet de passer une configuration partielle de backend
+    * -upgrade: pour upgrade les dépendances par exemple si les version des providers ont changé
 * Configure les backends, installe les providers et télécharge les modules
 
 ## Terraform plan
@@ -61,3 +62,7 @@
 * Déplace un state en modifiant une ressource
 * Cela permet de par exemple renommer une resource sans avoir à redeployer.
     * Example `terraform state mv aws_security_group.instance aws_security_group.cluster_instance`
+
+## Terraform providers lock
+``` terraform providers lock -platform=windows_amd64 -platform=linux_amd64 ```
+* Permet d'enregistrer le checksum des providers pour chaque plate-forme où est lancé les scripts. Terraform n'enregistre les checksums que pour la plate-forme courante par défaut.

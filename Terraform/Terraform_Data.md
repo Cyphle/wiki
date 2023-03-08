@@ -84,3 +84,26 @@ resource "aws_launch_configuration" "aninstance" {
 
 ## Template string
 * Il est possible d'utiliser "${...}
+
+## External data source
+* Allows an external command that implements a specifitc protocol to act as a data source
+* Pass data from Terraform to external program with query argument (received as JSON from stdin)
+* Pass external program data to Terraform in JSON to stdout
+* Example
+```
+data "external" "echo" {
+  program = ["bash", "-c", "cat /dev/stdin"]
+
+  query = {
+    foo = "bar"
+  }
+}
+
+output "echo" {
+  value = data.external.echo.result
+}
+
+output "echo_foo" {
+  value = data.external.echo.result.foo
+}
+```
