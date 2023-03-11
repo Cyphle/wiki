@@ -29,7 +29,7 @@ output "port" {
 ```
 
 ## Locals
-* Il s'agit de variables locales
+* Il s'agit de variables locales au module
 ```
 locals {
   VARS...
