@@ -18,3 +18,5 @@
     * Kubelet : l'agent à installer sur les noeuds pour parler au master
 * La CLI : kubectl
 * Kubernetes fonctionne à partir de descripteurs qui permettent de décrire les ressources à déployer
+* Convenient tool : k9s, kubectx, kubens
+* Pour minikube, le dashboard : `minikube dashboard`
