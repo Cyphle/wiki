@@ -49,19 +49,32 @@
 * Il s'agit des éléments qui permettent d'avoir une IP fixe vers les pods
 * Etant donné que les pods peuvent être détruits et recréés n'importe où, ils changent d'IP
 
-### Deployment
+### Replication controllers
+* Ressource qui s'assure que les pods surveillés sont toujours up.
+* Permet de gérer plusieurs instances de pods et conserve up le nombre de replicas spécifiés
+* C'est une ancienne version de replica set
 
-### Replication controller
+### ReplicaSets
+* Se comporte comme un replication controller
+* Un replica set peut utiliser des label selectors où une ressource n'a pas le label alors qu'un replication controller ne peut sélectionner que des ressources qui ont le label désiré
+* Il est possible de sélectionner uniquement par clé également
+* Peut utiliser des matchExpressions pour les sélecteurs
+    * In
+    * NotIn
+    * Exists
+    * DoesNotExist
 
-### ReplicaSet
+### DeamonSets
 
-### StatefullSet
+### Deployments
 
-### ConfigMap
+### StatefullSets
+
+### ConfigMaps
 
 ### Secrets
 
-### Network policy
+### Network policies
 
 ### PersistentVolume et PersistentVolumeClaim
 
@@ -85,4 +98,7 @@
 * `kubectl describe <object_type> <object_id>` : décrit <object_type> portant l'id <object_id>
 * `kubectl get <object_type>` : liste les ressources de type <object_type>
 * `kubectl explain <object_type>` : affiche une description de l'<object_type>
-* `kubectl apply <descripteur>` : déploie une ressource
+* `kubectl apply <descripteur>` : déploie une ressource (déclaratif)
+* `kubectl create <descripteur>` : créé la ressource (imperatif)
+* `kubectl delete <object_type> <object_id> <options>` : delete la ressource. Options :
+    * --cascade=false : par exemple pour un replication controller ne delete pas les pods
