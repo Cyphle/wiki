@@ -48,6 +48,13 @@
 ### Services
 * Il s'agit des éléments qui permettent d'avoir une IP fixe vers les pods
 * Etant donné que les pods peuvent être détruits et recréés n'importe où, ils changent d'IP
+* Avec les services, les pods peuvent se trouver via service name
+* Un service peut définir des sessions affinity
+* La définition des ports peut utiliser les noms des ports des pods
+* Avec les services, il est possible d'exposer des services externes à l'intérieur du cluster
+    * Définir une ressource endpoint qui pointe vers le service externe
+    * La rattacher à un service
+
 
 ### Replication controllers
 * Ressource qui s'assure que les pods surveillés sont toujours up.
@@ -65,6 +72,15 @@
     * DoesNotExist
 
 ### DeamonSets
+* Run one pod on each node
+* Possible de ne lancer les pods que sur certains noeuds avec les node selector
+
+### Job resource
+* Run one task then kill the pod
+* Il est possible de créer des job qui doivent se lancer plusieurs fois via des `multi-completion-batch-job`
+
+### CronJob
+* Pareil que les job mais schedulés
 
 ### Deployments
 
@@ -102,3 +118,4 @@
 * `kubectl create <descripteur>` : créé la ressource (imperatif)
 * `kubectl delete <object_type> <object_id> <options>` : delete la ressource. Options :
     * --cascade=false : par exemple pour un replication controller ne delete pas les pods
+* `kubectl exec <pod> -- curl -s <something>` : éxecuter ce qui se trouve après '--' dans le pod
