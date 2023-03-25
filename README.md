@@ -99,6 +99,9 @@ Messaging
 * [Kinesis](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Kinesis.md)
 * [MSK - Managed Streaming for Kafka](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_MSK.md)
 
+End User
+* [Quicksight](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Quicksight.md)
+
 
 # [Terraform](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform.md)
 
