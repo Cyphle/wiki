@@ -6,6 +6,7 @@
 * Works with nodes to distribute data
     * Mannually provisionned and can have reserved machines
     * Serverless (Elastic Resize)
+* Use case is for asynchronous reports on big data
 
 # Nodes
 * RA3 : with integrated stockage
