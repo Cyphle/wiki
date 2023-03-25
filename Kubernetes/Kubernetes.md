@@ -33,6 +33,9 @@
 * Selecteurs
     * Les selecteurs permettent aux ressources d'appeler d'autres ressources. Par exemple un service va cibler des pods via des labels
     * Cela permet aussi d'autres spécification comme pour contraindre le scheduling des pods sur certains noeuds (par exemple qui ont du GPU)
+* Probes à définir
+    * Readiness
+    * Liveness
 
 ## Ressources Kubernetes
 
@@ -47,6 +50,7 @@
 
 ### Services
 * Il s'agit des éléments qui permettent d'avoir une IP fixe vers les pods
+* Pour exposer le service uniquement à l'intérieur du cluster il faut mettre son type en ClusterIP (type par défaut)
 * Etant donné que les pods peuvent être détruits et recréés n'importe où, ils changent d'IP
 * Avec les services, les pods peuvent se trouver via service name
 * Un service peut définir des sessions affinity
@@ -54,7 +58,10 @@
 * Avec les services, il est possible d'exposer des services externes à l'intérieur du cluster
     * Définir une ressource endpoint qui pointe vers le service externe
     * La rattacher à un service
-
+* Exposer des services à l'extérieur du cluster
+    * En définissant le type du service en NodePort : expose un port du noeud à l'extérieur
+    * En définissant le type du service en LoadBalancer : expose via un load balancer qui va router le traffic vers les services des différents noeuds
+    * En créant un Ingress
 
 ### Replication controllers
 * Ressource qui s'assure que les pods surveillés sont toujours up.
@@ -82,6 +89,44 @@
 ### CronJob
 * Pareil que les job mais schedulés
 
+### Ingress
+* Ressource permettant de router du traffic vers des services
+* Se base sur le host et le path
+* Ressource au niveau 7 de la couche OSI
+* Permet d'appliquer des cookie based sessions affinity
+* Pour que les ingress marchent, il faut un ingress controleur
+    * NGinx
+    * Cloud load balancer
+* Pour le SSL/TLS, il n'y a besoin qu'entre le client et l'ingress controler
+    * Attach certificate and private key to ingress as secret
+
+### Volumes
+* Used to attach disk storage to containers
+* Créé lors de la création d'un pod et détruit à la destruction du pod
+* Volume types
+    * emptyDir : simple directory for transient data
+    * hostPath : for mounting directories from worker node filesystem
+    * gitRepo : initialized by checking out the content of a git repository
+    * nfs : nfs share mount
+    * gcePersistentDisk : for Google persistent disk
+    * awsElasticBlockStore : for AWS EBS
+    * azureDisk : for Microsoft
+    * cinder, cephfs, iscsi, flocker, glusterfs, quobyte, rbd, flexVolume, vsphere-Volume, photonPeristentDisk, scaleIO : other types of network storage
+    * configMap, secret, downwardAPI
+    * persistentVolumeClaim : use a dynamically provisioned persistent storage
+
+### PersistentVolumes & PersistentVolumeClaims
+* Permet de monter des volumes persistent sans en connaitre la nature
+* PersistentVolumes permettent de créer des ressources volume qui elles connaissent le type de stockage derrière (EBS, etc)
+* PersistentVolumeClaims permettent à un pod d'être bindé à un PersistentVolume
+* Un seul PersistentVolume peut être bindé à un PersistentVolumeClaim. Pour libérer le volume, il faut delete le pvc
+* Les pv sont des ressources au niveau cluster et non namespace
+* Au lieu de définir des pv manuellement, il est possible de créer un pv provisioner qui définit des storage class (les cloud providers en proposent en général)
+
+### StorageClass
+* Permettent de provisioner automatiquement des pv en proposant des types de volume
+* Les pvc définissent alors un storage class à utiliser pour que le pv soit créé
+
 ### Deployments
 
 ### StatefullSets
@@ -97,6 +142,9 @@
 ### Namespace
 * Un namespace Kubernetes permet de ségréger des ressources et de les grouper
 * Attention, par défaut les namespaces permettent de grouper des ressources mais n'isole pas les namespaces entre eux.
+
+### Sidecars
+* Un sidecar est un container qui va s'ajouter au container principal pour ajouter des features
 
 
 ## Commandes Kubectl
@@ -114,7 +162,7 @@
 * `kubectl describe <object_type> <object_id>` : décrit <object_type> portant l'id <object_id>
 * `kubectl get <object_type>` : liste les ressources de type <object_type>
 * `kubectl explain <object_type>` : affiche une description de l'<object_type>
-* `kubectl apply <descripteur>` : déploie une ressource (déclaratif)
+* `kubectl apply <descripteur>` : déploie une ressource (déclaratif). S'il y a un update de ressource, utiliser apply
 * `kubectl create <descripteur>` : créé la ressource (imperatif)
 * `kubectl delete <object_type> <object_id> <options>` : delete la ressource. Options :
     * --cascade=false : par exemple pour un replication controller ne delete pas les pods
