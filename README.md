@@ -62,7 +62,6 @@ Développement
 * [Amplify](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Amplify.md)
 * [SES - Simple Email Service](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_SES.md)
 * [OpenSearch](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_OpenSearch.md)
-* [Athena](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Athena.md)
 * [AppConfig](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_AppConfig.md)
 * [RedShift](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_RedShift.md)
 * [Glue](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Glue.md)
@@ -101,6 +100,7 @@ Messaging
 
 End User
 * [Quicksight](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Quicksight.md)
+* [Athena](https://github.com/Cyphle/wiki/blob/main/AWS/AWS_Athena.md)
 
 
 # [Terraform](https://github.com/Cyphle/wiki/blob/main/Terraform/Terraform.md)
