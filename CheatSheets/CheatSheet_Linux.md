@@ -149,6 +149,9 @@
 * Exemple : rename 's/^[a-zA-Z1-9\._ç]+/replacement/' *.jpg
 * Renome tous les fichiers jpg qui match la regex et remplace la regex par 'replacement'
 
+## Tailles des fichiers et sous-dossiers
+* `du -shc */`
+
 # Redirection de flux
 * > : rediriger vers un fichier (ex: cut -d , -f 1 notes.csv > res.txt)
 * >> : rediriger à la fin d'un fichier
