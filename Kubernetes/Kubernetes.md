@@ -42,6 +42,9 @@
 ### Pods
 * Smallest object that can be created
 * Contain one or multiple containers
+    * A noter que :
+        * `ENTRYPOINT ["node", "app.js"]`: lance le process directement
+        * `ENTRYPOINT node app.js`: lance le process dans un bash
 * Les containers qui tournent dans le même pod partagent le même namespace Linux
 * La clé `nodeSelector` dans la partie `spec` permet de définir des noeuds sur lesquels déployer (qui ont du gpu par exemple)
 * liveness : sonde à définir afin d'indiquer quand un pod est up
