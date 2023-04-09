@@ -130,6 +130,174 @@
 * Permettent de provisioner automatiquement des pv en proposant des types de volume
 * Les pvc définissent alors un storage class à utiliser pour que le pv soit créé
 
+### ConfigMaps
+* Les configmaps permettent d'exposer dans le pod des informations comme des variables d'environnements et des fichiers
+* De base pour injecter des variables d'environnements dans un pods, il est possible de définir dans les specs
+```
+kind: Pod
+spec:
+    containers:
+    - image: luksa/fortune:v1
+      env:
+      - name: INTERVAL
+        value: "30"
+      - name: FIRST_VAR
+        value: "foo"
+      - name: SECOND_VAR
+        value: "$(FIRST_VAR)bar"
+```
+* Mais il est préférable d'utiliser des configmaps. Les pods utilisent les utilisent via des variables d'environnements et les configmaps sont dans des volumes
+* Il est possible de créer des configmaps à partir d'un fichier `kubectl create configmap my-config --from-file=config-file.conf`
+* Il est possible de créer des configmaps à partir de tous les fichiers d'un dossier `kubectl create configmap my-config --from-file=/path/to/dir`
+* Pour passer une variable d'une configmap à un pod
+```
+apiVersion: v1
+kind: ConfigMap
+data:
+    sleep-interval: "25"
+metadata:
+    creationTimestamp: 2016-08-11T20:31:08Z
+    name: fortune-config
+    namespace: default
+    resourceVersion: "910025"
+    selfLink: /api/v1/namespaces/default/configmaps/fortune-config
+    uid: xxx
+
+------
+# Une variable
+apiVersion: v1
+kind: Pod
+metadata:
+    name: fortune-env-from-configmap
+spec:
+    containers:
+    - image: luksa/fortune:version
+      env:
+      - name: INTERVAL
+        valueFrom:
+            configMapKeyRef:
+                name: fortune-config
+                key: sleep-interval
+
+------
+# Toute la configmap
+apiVersion: v1
+kind: Pod
+metadata:
+    name: fortune-env-from-configmap
+spec:
+    containers:
+    - image: luksa/fortune:version
+      envFrom:
+      - prefix: CONFIG_
+        configMapRef:
+            name: my-config-map
+```
+* Pour les variables plus importantes, il est possible de passer des fichiers entiers
+```
+apiVersion: v1
+kind: Pod
+metadata:
+    name: fortune-configmap-volume
+spec:
+    containers:
+    - image: nginx:alpine
+      name: web-server
+      volumeMounts:
+      ...
+      - name: config
+        mountPath: /etc/nginx/conf.d
+        readOnly: true
+      ...
+    volumes:
+    ...
+    - name: config
+      configMap:
+        name: fortune-config
+    ...
+```
+
+### Secrets
+* Pour passer des informations sensible, il est préférable de passer par des secrets. Passage par variables d'environnements ou volumes
+* Chaque pod à un default token Secret
+* Les secrets définissent deux entrées: pour les valeurs plain text et celles base64
+```
+kind: Secret
+apiVersion: v1
+stringData:
+    foo: plain text
+data:
+    https.cert: ...
+
+-------
+apiVersion: v1
+kind: Pod
+metadata:
+    name: fortune-https
+spec:
+    containers:
+    - image: luksa/fortune
+      name: html-generator
+      env:
+      - name: INTERVAL
+        valueFrom:
+            configMapKeyRef:
+                name: fortune-config
+                key: sleep-interval
+      - name: FOO_SECRET
+        valueFrom:
+            secretKeyRef:
+                name: fortune-https
+                key: foo
+      volumeMounts:
+      - name: html
+        mountPath: /var/htdocs
+    - image: nginx:alpine
+      name: web-server
+      volumeMounts:
+      - name: html
+        mountPath: /usr/share/nginx/html
+        readOnly: true
+      - name: config
+        mountPath: /etc/nginx/conf.d
+        readOnly: true
+      - name: certs
+        mountPath: /etc/nginx/certs
+        readOnly: true
+      ports:
+      - containerPort: 80
+      - containerPort: 443
+    volumes:
+    - name: html
+      emptyDir: {}
+    - name: config
+      configMap:
+        name: fortune-config
+        items:
+        - key: my-nginx-config.conf
+          path: https.conf
+    - name: certs
+      secret:
+        secretName: fortune-https
+```
+* Il est possible de récupérer des secrets depuis du distant
+```
+# Créer un secret docker-registry nommé mydockerhubsecret
+kubectl create secret docker-registry mydockerhubsecret --docker-username=myusername --docker-password=mypassword --docker-email=my.email@mail.com
+
+------
+apiVersion: v1
+kind: Pod
+metadata:
+    name: private-pod
+spec:
+    imagePullSecrets:
+    - name: mydockerhubsecret
+    containers:
+    - image: username/private:tag
+      name: main
+```
+
 ### Deployments
 
 ### StatefullSets
