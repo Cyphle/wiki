@@ -125,6 +125,8 @@ End User
 
 
 # [Kubernetes](https://github.com/Cyphle/wiki/blob/main/Kubernetes/Kubernetes.md)
+* [Resources](https://github.com/Cyphle/wiki/blob/main/Kubernetes/Kubernetes_Resources.md)
+* [Security](https://github.com/Cyphle/wiki/blob/main/Kubernetes/Kubernetes_Security.md)
 
 
 # Cheat sheets
