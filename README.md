@@ -130,6 +130,7 @@ End User
 
 
 # [Architecture](https://github.com/Cyphle/wiki/blob/main/Architecture/Architecture.md)
+* [Microservices vs Monolithic](https://github.com/Cyphle/wiki/blob/main/Architecture/Architecture_MicroServiceVsMonolithic.md)
 
 # Cheat sheets
 

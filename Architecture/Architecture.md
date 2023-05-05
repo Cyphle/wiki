@@ -1,9 +1,8 @@
 # Architecture
 
 ## Micro service architecture
-* DDD/Boudary contexts
-* How to design
-* Pros/Cons
+* Micro service vs monolithic
+* How to design (DDD/Boudary contexts)
 
 ## Software architecture
 * CRUD
