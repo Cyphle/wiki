@@ -129,6 +129,8 @@ End User
 * [Security](https://github.com/Cyphle/wiki/blob/main/Kubernetes/Kubernetes_Security.md)
 
 
+# [Architecture](https://github.com/Cyphle/wiki/blob/main/Architecture/Architecture.md)
+
 # Cheat sheets
 
 * [Linux](https://github.com/Cyphle/wiki/blob/main/CheatSheets/CheatSheet_Linux.md)
