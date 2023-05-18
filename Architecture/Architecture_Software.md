@@ -3,8 +3,16 @@
 Le point important à noter est qu'il n'existe pas d'architecture qui résoudra tous les problèmes. Chaque architecture répond à des besoins mais apportent également sa complexité. Egalement, les architectures ne sont pas exclusives entre elles.
 
 ## CRUD
+L'architecture CRUD est assez classique et utile pour les applications qui n'ont pas particulièrement de métier. Il s'agit de séparer les flux d'éxecution en fonction de l'action Create, Read, Update et Delete.
 
 ## Hexagonal
+L'architecture Hexagonale permet de ségregger la partie métier (le domaine) de l'infrastructure. Cela permet de découpler le métier de tout ce qui est side effect comme l'accès en base de données, l'exposition de endpoints HTTP, ...
+
+Un avantage est par exemple de permettre l'exploitation de données via différentes méthodes (HTTP, envoi dans un bus de message, ...) sans avoir à réécrire le code métier mais uniquement des adapteurs.
+
+Cette architecture repose sur le principe D de Solid : Dependency inversion principle.
+
+Elle repose sur des interfaces et des mappings pour passer d'un monde à l'autre.
 
 ## Command Query Responsibility Segregation (CQRS)
 Le principe est de séparer tous les flux concernant l'écriture de tous les flux concernant la lecture.
@@ -27,5 +35,7 @@ L'event store est immutable. Si une erreur survient, il faut injecter des évén
 Afin de récupérer les aggregate root, il faut soit récupérer par ID, soit tout récupérer.
 
 ## Event Driven
+L'architecture event driven permet de faire réagir une application à des événements métiers. Il s'agit de faire circuler des informations métier au lieu de pures structures de données.
 
 ## Lambda Core
+L'architecture lambda core est l'équivalent de l'architecture hexagonale mais en fonctionnel.
