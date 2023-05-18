@@ -6,6 +6,7 @@ Ici se trouvent des notes sur ce qu'est AWS. Notes prisent lors des formations
 
 ## A journey with AWS to deploy a web application
 
+// TODO
 Quelques clés pour utiliser AWS:
 1. Considération à avoir pour la création d'applications web (développement, infra, industrialisation, sécurité)
 1. Understand what is a cloud provider
