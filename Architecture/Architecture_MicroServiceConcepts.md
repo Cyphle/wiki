@@ -13,3 +13,8 @@ Pour gérer le transactionnel dans une architecture microservices, il faut utili
 ### Orchestration based Saga
 * Un service contient une class Saga, c'est celui-ci qui va orchestrer la transaction. Ce service d'orchestration traite l'ensemble des messages suite aux différents traitements et republie des messages pour orchestrer les autres services.
 * C'est le service orchestrateur qui va lancer le rollback dans le cas où il y a une erreur quelque part. Il va publier des messages dans l'ordre inverse.
+
+## Back for front
+Lorsque l'on a une architecture micro-services, parfois un service métier a besoin d'être utilisé par plusieurs services consommateurs ou être exposé via plusieurs services. Par exemple, un service calculant des indicateurs peut être appelé pour être exposé via une API externe et via un dashboard.
+
+Afin d'éviter d'avoir à recoder les calculs, il peut être intéressant d'introduire des services back for front. Il s'agit de services qui n'ont pas de logique métier mais sont uniquement en charge de faire proxy vers plusieurs autres services qu'ils vont uitliser.
