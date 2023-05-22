@@ -12,6 +12,5 @@ Aller sur `axoniq.io`
 
 ## How to configure
 La liste des propriétés se trouve à `https://docs.axoniq.io/reference-guide/axon-server/administration/admin-configuration/configuration#configuration-properties`.
-
-La configuration doit aller dans un fichier placé dans un sous-dossier `config` où se trouve le jar d'Axon server. Le fichier doit s'appeler `axonserver.properties` ou `axonserver.yml`.
-
+* Avec une installation depuis le .jar, la configuration doit aller dans un fichier placé dans un sous-dossier `config` où se trouve le jar d'Axon server. Le fichier doit s'appeler `axonserver.properties` ou `axonserver.yml`.
+* Avec une installation depuis un container, utiliser des variables d'environnement
