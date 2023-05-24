@@ -11,3 +11,10 @@ Pour envoyer les commands, il faut injecter une command gateway d'Axon. Les comm
 * Il contient également les event sourcing handler qui permettent de réhydrater l'objet à partir des événements
 * Un aggregat doit avoir un constructeur vide
 * Pour envoyer un événement depuis l'aggregat, il faut utiliser `AggregateLifecycle.apply(event)`
+
+## Anotations
+* TargetAggregateIdentifier
+* AggregateIdentifier
+* Aggregate
+* CommandHandler
+* EventSourcingHandler  
