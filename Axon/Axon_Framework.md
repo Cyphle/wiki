@@ -18,3 +18,7 @@ Pour envoyer les commands, il faut injecter une command gateway d'Axon. Les comm
 * Aggregate
 * CommandHandler
 * EventSourcingHandler  
+
+## Message Dispatch Interceptor
+* Pour faire des opérations sur les messages avant leur réception comme de la valition
+* Il s'agit de class qui implémentent `MessageDispatchInterceptor`
