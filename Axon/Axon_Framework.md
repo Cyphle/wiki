@@ -38,3 +38,20 @@ Pour envoyer les commands, il faut injecter une command gateway d'Axon. Les comm
     }
 ```
 * TODO : il faut faire des notes avec ce qu'il faut savoir dans l'ordre (naming important, concepts, etc)
+* Titres pour des notes plus précises
+    * Concepts
+        * Aggregate & Entities
+        * Command
+        * Event
+        * Messaging
+    * Axon Messaging
+        * Command gateway
+        * Event bus
+    * Configuration
+        * Notes de configuration
+    * Utilisation
+        * Command handler
+        * ...
+        * Validations
+        * Replay
+        * Snapshot
