@@ -29,6 +29,17 @@ Pour envoyer les commands, il faut injecter une command gateway d'Axon. Les comm
 ## Event handling
 * Si un événement est handle par plusieurs handlers, il est possible de les grouper dans un unique processing group avec `@ProcessingGroup("product-group")`. C'est pour que handlers soient tous dans le même thread
 
+## Event processor
+* Tracking mode (default): pull their messages from a source using a thread that it manages itself in a different thread
+* Subscribing mode : subscribe themselves to a source of events and are invoked by thread managed by the publishing mechanism in the same thread
+
+## Error handling
+* With tracking mode, un event en erreur est retry avec une back-off period avec un maximum de 60s timeout
+* With subscribing mode, une erreur peut être remontée au haut de la chaîne pour rollback la transaction
+* Si une exception est lancée dans un command handler, la transaction est rollback
+* Si une exception est lancée depuis un commandhandler, même si l'exception est de type Exception, il s'agira une d'exception de type `CommandExecutionException` qui sera lancée
+* `@ExceptionHandler` de Axon permet de catcher les exceptions. Il faut coupler l'annotation avec une classe qui implémente `ListenerInvocationErrorHandler` pour qu'Axon soit capable de rollback la transaction. Il faut noter rethrow l'exception. Il faut également enregistrer le listener afin de le binder au processing group.
+
 ## Notes
 * Pour lire les événements d'un aggregat ou vérifier s'il existe pas déjà, essayer
 ```
