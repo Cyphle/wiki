@@ -60,6 +60,7 @@ Pour envoyer les commands, il faut injecter une command gateway d'Axon. Les comm
         * Command
         * Event
         * Messaging
+        * Exception (Axon utilise a fond les exceptions pour arrêter et rollback les transactions)
     * Axon Messaging
         * Command gateway
         * Event bus
