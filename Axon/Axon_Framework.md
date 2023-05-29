@@ -66,3 +66,4 @@ Pour envoyer les commands, il faut injecter une command gateway d'Axon. Les comm
         * Validations
         * Replay
         * Snapshot
+* Dans un pattern cqrs évent source axon, il faut pouvoir envoyer des commandes aux aggregats par id. ça veut dire que les projections contiennnent le nécessaire pour connaître tous les ids
