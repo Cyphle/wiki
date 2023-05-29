@@ -40,6 +40,11 @@ Pour envoyer les commands, il faut injecter une command gateway d'Axon. Les comm
 * Si une exception est lancée depuis un commandhandler, même si l'exception est de type Exception, il s'agira une d'exception de type `CommandExecutionException` qui sera lancée
 * `@ExceptionHandler` de Axon permet de catcher les exceptions. Il faut coupler l'annotation avec une classe qui implémente `ListenerInvocationErrorHandler` pour qu'Axon soit capable de rollback la transaction. Il faut noter rethrow l'exception. Il faut également enregistrer le listener afin de le binder au processing group.
 
+## Saga
+* Pattern pour gérer les transactions en micro service. Cela permet par exemple de synchroniser une transaction et de la rollback
+* Une sage a un début `@StartSage` et une fin `@EndSaga`. Le `@EndSaga` doit être sur un `@SagaEventHandler`
+* Les `@SagaEventHandler` définissent des `associationProperty` qui permettent d'associer l'instance de saga avec l'objet (préférer l'aggregate identifier)
+
 ## Notes
 * Pour lire les événements d'un aggregat ou vérifier s'il existe pas déjà, essayer
 ```
