@@ -69,8 +69,12 @@ Pour envoyer les commands, il faut injecter une command gateway d'Axon. Les comm
     * Utilisation
         * Command handler
         * ...
-        * Validations
+        * Validations (Bean validation with Spring, axon command interceptor, dans la query avec les axon exceptionhandler & ListenerInvocationErrorHandler pour rollback au niveau du catching des events)
+        * Saga : synchronisation entre les aggregats
         * Replay
         * Snapshot
-        * Testing (unit, integration, jgiven/acceptance)
+        * Testing (unit, integration, jgiven/acceptance) 
+            * https://discuss.axoniq.io/t/starting-axon-server-using-testcontainers-from-a-springboottest-port-conflict/2166
+            * https://androidexample365.com/running-axon-server-in-testcontainers-tests/
+            * https://github.com/holixon/axon-server-testcontainer
 * Dans un pattern cqrs évent source axon, il faut pouvoir envoyer des commandes aux aggregats par id. ça veut dire que les projections contiennnent le nécessaire pour connaître tous les ids
