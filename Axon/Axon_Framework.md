@@ -78,3 +78,35 @@ Pour envoyer les commands, il faut injecter une command gateway d'Axon. Les comm
             * https://androidexample365.com/running-axon-server-in-testcontainers-tests/
             * https://github.com/holixon/axon-server-testcontainer
 * Dans un pattern cqrs évent source axon, il faut pouvoir envoyer des commandes aux aggregats par id. ça veut dire que les projections contiennnent le nécessaire pour connaître tous les ids
+
+•	Comment on fait si on a plusieurs aggregats ?
+•	Comment les synchroniser ? Est-ce qu’utiliser des saga c’est recommandé ?
+> C'est un process. On peut utiliser les Saga de Axon qui sont asynchrone et sont un process
+
+
+•	Comment envoyer des opérations en batch (création, update, etc exemple avec les arborescences) ? Pour des optimisations notamment par exemple créer des objets en masse partie command ET partie query
+> Normalement il n'y a pas besoin de faire de batch
+> A tester avec un traitement unitaire
+> Pour la partie projection, on peut augmenter le segment du batch (micro batch)
+
+
+•	Comment peut-on se passer de set based validation ? Ca demande d’avoir une base de données supplémentaire
+> Contrainte d'unicité : les attributs d'unicité, il faut les sharder, cela devient une clé qui devient l'id d'aggregat (qui n'est plus généré aléatoirement) (cf exemple github.com/karamelsoft/axon-bank customer constraint)
+
+
+•	Est-ce qu’on doit avoir tous les id en front pour envoyer dans la command ? Par exemple, je veux update tous les trucs qui ont tel attribut ou je veux créer une arborescence à tous mes actifs mais mes actifs sont déjà créés
+> On peut faire des commandes qui peuvent ne pas être liées à un aggregat. Il faut une routing key (@Routing). Il s'agit d'une vraie saga. La routing key représente la région.
+> Il faut utilsier un process qui appelle la query
+
+
+•	Comment lire les events pour faire un audit trail ? Est-ce que c’est recommandé ?
+> Il ne faut pas attaquer directement l'event store directement pour des questions de perf. Il faut utiliser des eventhandler ou eventinterceptor pour les projeter
+> Le store n'est pas une vue
+
+
+Un process (@Saga) est quelque chose qui se passe suite à un événement métier. Ce n'est pas de la commande. C'est de la synchro.
+
+On doit pas avoir besoin de faire de find aggregate
+
+
+Il faut bien avoir des read et write déployés indépendamment (le write doit être shardé et le read doit être répliqué)
