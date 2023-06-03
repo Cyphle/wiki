@@ -105,6 +105,15 @@ Pour envoyer les commands, il faut injecter une command gateway d'Axon. Les comm
 * Une command doit avoir un unique handler
 * Les events doivent être serializables
 
+## Replay
+* Le principe est de relire tous les events du store pour relancer tous les `@EventHandler` et reconstruire les projections
+* Supporté par le Tracking Event Processor
+* Possible de rajouter des `@DisallowReplay` pour exlure des event handler du replay
+* Avant de lancer un replay, il faut arrêter le tracking event processor pour éviter qu'il soit dans un état non départ
+* `@ResetHandler` permet de lancer une action avant le début du replay
+* Les sagas ne sont pas replaybale par défaut
+* Les event processor subscribing ne peuvent être utilisé pour du replay
+
 ## Notes
 * Pour lire les événements d'un aggregat ou vérifier s'il existe pas déjà, essayer
 ```
@@ -115,7 +124,7 @@ Pour envoyer les commands, il faut injecter une command gateway d'Axon. Les comm
 ```
 * TODO : il faut faire des notes avec ce qu'il faut savoir dans l'ordre (naming important, concepts, etc)
 * Titres pour des notes plus précises
-    * CQRS l'architecture (idem que dans la partie architecture), DDD
+    * CQRS l'architecture (idem que dans la partie architecture), DDD, Event driven, Event sourcing (à priori toutes les applications ont besoin de tracing et d'audit)
     * Concepts
         * Aggregate & Entities
         * Command
