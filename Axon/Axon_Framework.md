@@ -44,6 +44,66 @@ Pour envoyer les commands, il faut injecter une command gateway d'Axon. Les comm
 * Pattern pour gérer les transactions en micro service. Cela permet par exemple de synchroniser une transaction et de la rollback
 * Une sage a un début `@StartSage` et une fin `@EndSaga`. Le `@EndSaga` doit être sur un `@SagaEventHandler`
 * Les `@SagaEventHandler` définissent des `associationProperty` qui permettent d'associer l'instance de saga avec l'objet (préférer l'aggregate identifier)
+* Les dépendances doivent être transient pour éviter qu'elles soient sérialisées car les saga sont sérialisées
+
+## Deadlines
+* Les deadlines permettent de gérer le temps pour finir une saga ou la faire avancer. Deadline is an Event that takes place of an absence of an event.
+* Par exemple, si on attend un événement dans les x heures et qu'il n'arrive pas, une deadline peut être trigger pour démarrer un flow de compensation
+* Les deadlines peuvent être dans les saga ou les aggregats
+* Trigger a state change or a command
+* Ce n'est pas sourced : un deadline event n'est pas enregistré dans l'event store
+* Deadlinemanager
+    * Simple deadline manager : keeps scheduled tasks in memory (si la jvm est redémarrée, les deadlines sont perdues)
+    * QuartzDeadlineManager : sauvegarde les deadlines en base. préféreable pour les deadlines longues par exemple 72 heures. S'appuie sur QuartzScheduler qui est hors Axon mais une dépendance supplémentaire
+* `deadlineManager.schedule(<time>, "deadline-name", event)` & `@DeadlineHandler(deadlineName = "deadline-name")`
+* Deadline scope : le scope où le résultat de la deadline doit être traité (par défaut dans le même fichier)
+* Il ne faut pas oublier de cancel les deadlines sinon elles peuvent se redeclencher
+* La déclaration d'une deadline retourne un ID qui permet de cancel une deadline en particulier
+
+## Subscription queries
+* En CQRS nous sommes en eventual consistency
+* Subscription queries permet de retourner le résultat courant et si un changement arrive, notifie le client avec l'update. Ceci jusqu'à ce qu'il y ait un cancel de subscription
+* Par exemple
+    * S'il y a une UI,
+        1. client envoie une command
+        2. si la command est successfull, envoyer une subscription query
+        3. quand le saga flow a fini
+        4. envoyer une update
+    * Si no UI (par exemple avec postman)
+        1. Inject query gateway dans le controller
+        2. Si la command est successfull, query gateway envoie une subcription query
+        3. Envoie la data à jour
+* L'object `QueryUpdateEmitter` permet d'émettre des changements liés pour une query avec `queryUpdateEmitter.emit`
+
+## Snapshots
+* Permet de créer une image tous les x events d'un aggregat
+* Un snapshot est un event
+* Paramétrage :
+    * regular intervals
+    * after x events
+    * when loading takes longer than specified time
+
+## Message correlation
+* il est possible de correler les messages entre eux comme les events et les query responses et les commands
+* les correletion id se trouvent dans les meta data des messages
+* pour générer il faut utiliser des `CorrelationDataProvider`
+* Par defaut c'est `MessageOriginProvider` qui créé des correlationId et traceId
+    * correlationId référence le message parent
+    * traceId référence le message root
+* pour créer des custom provider il faut implémenter `CorrelationDataProvider`
+* il existe des provider 
+    * SimpleCorrelationDataProvider
+    * MultiCorrelationDataProvider qui merge des prvoviders
+
+## Messages au sein d'Axon
+* Tout est message
+* ils ont des meta data
+* les commands sont wrappes dans des CommandMessage
+* les events wrappés dans des EventMessage
+* si c'est un aggregat qui publie un event, c'est un DomainEventMessage
+* Une query peut avoir plusieurs handler
+* Une command doit avoir un unique handler
+* Les events doivent être serializables
 
 ## Notes
 * Pour lire les événements d'un aggregat ou vérifier s'il existe pas déjà, essayer
@@ -55,6 +115,7 @@ Pour envoyer les commands, il faut injecter une command gateway d'Axon. Les comm
 ```
 * TODO : il faut faire des notes avec ce qu'il faut savoir dans l'ordre (naming important, concepts, etc)
 * Titres pour des notes plus précises
+    * CQRS l'architecture (idem que dans la partie architecture), DDD
     * Concepts
         * Aggregate & Entities
         * Command
