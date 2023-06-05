@@ -180,3 +180,5 @@ On doit pas avoir besoin de faire de find aggregate
 
 
 Il faut bien avoir des read et write déployés indépendamment (le write doit être shardé et le read doit être répliqué)
+
+* tester si y a plusieurs tracking processor, si on lance un replay, comment ça se pases
