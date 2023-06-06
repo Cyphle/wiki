@@ -15,16 +15,41 @@ Le Domain Driven Design a été mis sur papier par Eric Evans dans son "Blue Boo
 * Bounded Context : un logiciel sera plus évolutif et plus maléable si son découpage respecte des frontières qui sont définies par les domaines métier. Qu'il s'agisse de monolithes ou d'architectures microservices, avoir un découpage métier permettra de plus facilement faire évoluer un métier et d'éviter de le dupliquer.
 
 ### Architecture event driven
+Une architecture event driven repose sur le principe que lorsqu'il se passe quelque chose de structurant au sein d'une application, un événement est émis afin de faire réagir le système. Cela permet notamment de découpler les différents morceaux du systèmes.
 
+Une architecture event driven est souvent associée à un flux de communication via bus de messages, qu'il soit interne (bus Guava par exemple) ou externe (RabbitMQ, Kafka, ...). 
+
+Il ne faut pas confondre les messages qui circulent avec les événements du système. Un message est une structure qui circule au sein d'un bus de message et un événement représente un changement du métier.
 
 ### Architecture CQRS
+Une application, quelque soit le besoin métier auquelle elle répond, propose des actions d'écriture et des actions de lecture. En moyenne, les opérations de lecture sont plus nombreuses. Egalement, la scalabilité d'une application peut être complexe, qu'il s'agisse de scalabilité horizontale ou scalabilité verticale. Quelques raisons de complexité de scalabilité sont notamment au niveau des opérations d'écriture et de leur concurrence.
+
+L'architecture CQRS, Command Query Responsiblity Segregation/Separation, permet de répondre à ces problématiques. Le principe est de de ségreger les opérations d'écriture des opérations de lecture. Lorsqu'on parle d'opérations, il s'agit d'opérations métier.
+
+Une application respectant l'architecture CQRS permet d'obtenir deux déployables indépendants, un pour l'écriture, un pour la lecture. Chacun ayant son modèle de donnée et son stockage bien distinct. Cela permet de pouvoir scaler les deux morceaux de manière indépendante, sachant que du sharding pour scaler l'écriture intéressant et de la réplication est intéressant pour de la lecture.
 
 ### Architecture Event sourcing
+Dans certains cas, il y a un besoin fort de conserver un historique de tout ce qu'il se passe au sein d'un système. En partant d'une architecture event driven qui émet des événements métier, il est intéressant de les stocker afin d'avoir un historique très métier.
 
+A partir du moment où l'ensemble des événements d'un système sont stockés, il devient possible de reconstruire entièrement les aggregats (les objets métiers) à partir des événements. On parle alors de système en event sourcing.
 
 ## Concepts Axon
 
-### Objets : Aggregate, Entities, Command, Event
+### Présentation
+Axon framework est un framework CQRS Event sourcing. Il impose une construction d'application respectant ces deux architectures en plus de certains concepts propres à Axon.
+
+Il n'est cependant pas obligatoire d'avoir deux déployables distincts pour la partie lecture et écriture bien que cela soit fortement conseillé.
+
+### Objets : Aggregate, Entities, Command, Event & Value Objects
+
+#### Aggregate
+Un aggregat est un objet métier ayant son cycle de vie propre. Un aggregat est alors identifiable uniquement via son identifiant qui doit être unique au sein d'un système. On peut également parler d'aggregat racine (aggregate root) qui est la racine des objets métier.
+
+Axon préconise de n'avoir qu'un seul aggregat mais il est possible d'en avoir plusieurs. Cependant, la synchronisation des aggregats doit se faire via des mécanismes comme les saga.
+
+#### Entities
+Un aggregat peut être consistutié d'objets ayant également leur propre cycle de vie. On parle alors d'entité.
+
 
 ### Messaging
 
