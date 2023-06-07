@@ -1,18 +1,49 @@
 # What is RDS
 
-Pour Relational Database Service
+Pour Relational Database Service.
+
+# Pricing
+* Pay as you go model. Par heure
+* On dmande : pay per hour
+* Reserved instance (1 ou 3 ans) : il y a des réductions
+* Paie par I/O per millions requests
+* Paie pour les transferts de data
+* 1 credit = 100% CPU utilization for one minute
 
 # Notes
-
-* PostGreSQL, MariaDB, MariaDB, Oracle, SQL Server, Aurora
-* Automated provisionning, OS patching
-* Continuous backups and restore
-* Monitoring dashboards
-* Lulti AZ
-* Storage backed by EBD gp2 or io1
+* AWS RDS est compatible avec : PostGreSQL, MariaDB, MariaDB, Oracle, SQL Server, Aurora
+* Il s'agit d'un service managé
+* Les instances sont lancés dans un VPC
+* Le stockage est sur des EBS (gp2 ou io1). Peut être augmenté via de l'auto scaling
+* Les backups sont automatisés avec des point in time recovery. Les backups ont une durée de vie. Il est également possible de faire des snapshots et de les restaurer cross region.
+* Le monitoring est intégré via CloudWatch. Il y a des Monitoring dashboards
+* Des événements sont lancés lorsqu'il y a des opérations ou des problèmes. Il est possible d'être notifié via SNS.
+* Peut-être déployé cross AZ.
+* Multi AZ est synchrone et les read replica sont asynchrones.
+* Automated provisionning, OS patching est automatique
+* Supporte le scaling vertical et horizontal
 * Cannot SSH
-* Scales automatically when storage is at limit
-* Have to set maximum storage threashold
+* Scales automatically when storage is at limit. Have to set maximum storage threashold.
+* Instance class
+    * Standard
+    * Memory optimized
+    * Bustable performance : small workloads. CPU on demand.
+* Storage type
+    * General purpose storage (cost effective SSD)
+        * Choose storage size
+        * Baseine of 3 IOPS/GB
+        * Volumes below 1Tb and can burst to 3000 IOPS
+        * Variable workloads
+        * Used for small to medium sized DB for non prod
+* Provisioned IOPS (high performance storage, recommanded for production)
+    * Choose storage size and required IOPS
+    * Fast and predictable performance
+    * Up to 32000 IOPS max per DB instance
+    * Use when IO intensive workloads
+    * Use when write heavy workloads
+
+
+
 * Automatically modify storage if
     * Free storage is less than 10% of allocated storage
     * Low torage lasts at least 5min
@@ -29,8 +60,6 @@ Pour Relational Database Service
 * From single AZ to multi AZ is 0 downtime
 * Il y a une option free tier pour s'entrainer
 * For high availability, active multi AZ.
-* Multi AZ is synchronous and read replicas are asynchronous
-* RDS run in VPC
 
 ## RDS Aurora
 * Storage automatically grows in increments of 10Gb

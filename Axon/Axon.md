@@ -45,13 +45,41 @@ Il n'est cependant pas obligatoire d'avoir deux déployables distincts pour la p
 #### Aggregate
 Un aggregat est un objet métier ayant son cycle de vie propre. Un aggregat est alors identifiable uniquement via son identifiant qui doit être unique au sein d'un système. On peut également parler d'aggregat racine (aggregate root) qui est la racine des objets métier.
 
+Etant donné que les aggregats sont identifiés via leur identifiant, il s'agit de class. Avec Kotlin par exemple, il faut les déclarer en `class` et non `data class`
+
 Axon préconise de n'avoir qu'un seul aggregat mais il est possible d'en avoir plusieurs. Cependant, la synchronisation des aggregats doit se faire via des mécanismes comme les saga.
+
+La déclaration d'un aggregat Axon se fait via l'annotation `@Aggregate`.
 
 #### Entities
 Un aggregat peut être consistutié d'objets ayant également leur propre cycle de vie. On parle alors d'entité.
 
+La déclaration des entitiés Axon se fait via les annotations `@AggregateMember` mis au niveau de l'aggregat et `@EntityId` mis au niveau de l'identifiant de l'entité.
+
+### Value objects
+Les value objects sont des structures de données n'ayant pas de cycle de vie propre mais aggrémente les aggregats d'information. Pour identifier un value object, il faut faire un strict equal sur l'ensemble des champs.
+
+### Command
+Une command est un structure de données demandant un changement d'état du système.
+
+Les commandes ne doivent demander qu'un seul changement d'état afin de ne pas se retrouver avec des commandes "fourre-tout" qui peuvent impacter trop d'éléments.
+
+Les commandes respectent le pattern `<VerbeALinfinitif><NomMetier>Command`.
+
+Les commandes doivent obligatoirement cibler les aggregats.
+
+L'aggregat est ciblé via l'annotation `@TargetAggregateIdentifier`.
+
+### Event
+Un événement est la représentation d'un changement passé au sein de l'aggregat. Les événements doivent donc contenir l'identifiant de l'aggregat ainsi que les informations strictement nécessaire pour identifier le changement.
+
+Il s'agit de value objects et respectent la convention `<NomMetier><VerbeAuPassé>Event`.
+
 
 ### Messaging
+Les flux d'éxecution au sein d'Axon sont régis par des messages et transitent via différents bus. Les objets qui y circulent sont notamment les commands et les events. Ceux-ci sont wrappés dans des objets qui sont respectivement `CommandMessage` et `EventMessage`. Si un événement est envoyé depuis un aggregat, il sera wrappé dans un `DomainEventMessage`.
+
+Les commands et events deviennent alors les payload des messages, ceux-ci comportant également des méta données de type clé/valeur afin de rajouter des informations comme des correlationIds, traceIds ou autre données custom.
 
 #### Command Gateway
 
