@@ -33,6 +33,7 @@ Dans certains cas, il y a un besoin fort de conserver un historique de tout ce q
 
 A partir du moment où l'ensemble des événements d'un système sont stockés, il devient possible de reconstruire entièrement les aggregats (les objets métiers) à partir des événements. On parle alors de système en event sourcing.
 
+
 ## Concepts Axon
 
 ### Présentation
