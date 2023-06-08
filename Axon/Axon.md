@@ -75,28 +75,61 @@ Un événement est la représentation d'un changement passé au sein de l'aggreg
 
 Il s'agit de value objects et respectent la convention `<NomMetier><VerbeAuPassé>Event`.
 
+Axon étant en Event Sourcing, les events du domaine sont enregistrés dans un Event store. Cet Event store peut être n'importe quelle base de données ou Axon server.
+
 
 ### Messaging
 Les flux d'éxecution au sein d'Axon sont régis par des messages et transitent via différents bus. Les objets qui y circulent sont notamment les commands et les events. Ceux-ci sont wrappés dans des objets qui sont respectivement `CommandMessage` et `EventMessage`. Si un événement est envoyé depuis un aggregat, il sera wrappé dans un `DomainEventMessage`.
 
 Les commands et events deviennent alors les payload des messages, ceux-ci comportant également des méta données de type clé/valeur afin de rajouter des informations comme des correlationIds, traceIds ou autre données custom.
 
-#### Command Gateway
+### Message correlation
+Les messages peuvent être corrélés entre. Cela est particulièrement utile pour tracer toute une chaîne d'exécution. Il faut placer les id de corrélation dans les méta data des messages.
 
-#### Event bus
-* Tracking/subscribing
+Pour générer ces id de corrélation, il faut utiliser des `CorrelationDataProvider`. De base, est fourni `MessageOriginProvider` qui insère des `correlationId` et des `traceId`, avec les correlationId référençant le message parent et les traceId référençant le message d'origine.
+
+Afin de créer des custom provider, il faut implémenter l'interface `CorrelationDataProvider`. Il est également possible d'utiliser des providers fournis comme `SimpleCorrelationDataProvider` permettant d'insérer des meta data ou `MultiCorrelationDataProvider` permettant d'utiliser plusieurs providers en même temps.
+
+#### Command utilisation
+Les commandes doivent être envoyées dans une command gateway. Par exemple `commandGateway.post(<MaCommand>)`. Il est important de noter que les commandes envoyées doivent être typées, il ne faut pas envoyer de liste en raison du type erasure de Java qui ne permettra pas un routing correct. De plus, le pattern veut que les commandes soient envoyées une à une.
+
+##### Command handling
+Les commands sont récupérées par des handlers qui se trouvent dans les aggregats (y compris les commandes de création) via des annotations `@CommandHandler` et la commande en paramètre.
+
+##### Command dispatch interception
+// TODO
+
+##### Command handler interception
+// TODO
+
+#### Event utilisation
+Les events doivent être envoyés dans des bus de messages via la méthode `AggregateLifeCycle.apply(<Event>)`. Il s'agit d'une méthode statique afin de ne pas avoir à injecter de dépendance dans les aggregats.
+
+##### Event handling
+Les events sont récupérées par des handlers qui se trouvent soit dans les aggregats via l'annotation `@EventSourcingHandler` avec l'event en paramètre pour pouvoir les reconstruire (principe Event Sourcing), soit dans des handlers permettant de construire des projections via l'annotation `@EventHandler` avec l'event en paramètre.
+
+##### Listening mode
+Les event handlers ont deux modes de récupération des events :
+* Tracking : qui est le mode par défaut. Cela créé un thread par event handler (non event sourcing handler) avec un mode 'pull'
+* Subscription : qui n'ouvre qu'un seul thread pour tous les event handlers (non event sourcing handler) appartenant aux class ayant l'annotation `@ProcessingGroup(<NomDuProcessor>)` avec le même nom de processeur. Ce mode de récupération d'events permet notamment d'appliquer des mécanismes de rollback dans le cas où un event handler échoue, tous les autres vont échouer et la transaction jusqu'à la command est rollback. Il n'y aura donc pas d'event enregistré dans l'event store.
 
 ### Exception management
+// TODO
 
 ### Saga/Process
+// TODO
 
 ### Replay
+// TODO
 
 ### Snapshot
+// TODO
 
 ### Testing
+// TODO
 
 ### Configuration
+// TODO
 
 
 * CQRS l'architecture (idem que dans la partie architecture), DDD, Event driven, Event sourcing (à priori toutes les applications ont besoin de tracing et d'audit)
