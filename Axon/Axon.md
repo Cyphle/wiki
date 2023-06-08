@@ -97,7 +97,7 @@ Les commandes doivent être envoyées dans une command gateway. Par exemple `com
 ##### Command handling
 Les commands sont récupérées par des handlers qui se trouvent dans les aggregats (y compris les commandes de création) via des annotations `@CommandHandler` et la commande en paramètre.
 
-##### Command dispatch interception
+##### Command dispatch interception & validation
 // TODO
 
 ##### Command handler interception
