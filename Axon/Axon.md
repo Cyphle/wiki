@@ -103,6 +103,7 @@ Les commands sont récupérées par des handlers qui se trouvent dans les aggreg
 // TODO
 
 ##### Command handler interception
+* Il s'agit d'interceptor `@CommandHandlerInterceptor` se trouvant dans les aggregat
 // TODO
 
 #### Event utilisation
