@@ -9,6 +9,33 @@ Aller sur `axoniq.io`
 * As a Docker container `https://developer.axoniq.io/w/running-axon-server-in-docker-continuing-from-local-developer-install-to-containerized`
     * Bind volumes `eventdata` & `config` of container
     * Ports 8024 & 8124
+* Exemple de docker-compose
+```
+version: '3.3'
+services:
+  axonserver:
+    image: axoniq/axonserver
+    hostname: axonserver
+    platform: linux/arm64/v8
+    volumes:
+      - axonserver-data:/data
+      - axonserver-events:/eventdata
+      - axonserver-config:/config:ro
+    ports:
+      - '8024:8024'
+      - '8124:8124'
+      - '8224:8224'
+    networks:
+      - axon-demo
+
+volumes:
+  axonserver-data:
+  axonserver-events:
+  axonserver-config:
+
+networks:
+  axon-demo:
+```
 
 ## How to configure
 La liste des propriétés se trouve à `https://docs.axoniq.io/reference-guide/axon-server/administration/admin-configuration/configuration#configuration-properties`.

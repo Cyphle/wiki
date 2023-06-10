@@ -105,6 +105,8 @@ Les commandes doivent être envoyées dans une command gateway. Par exemple `com
 ##### Command handling
 Les commands sont récupérées par des handlers qui se trouvent dans les aggregats (y compris les commandes de création) via des annotations `@CommandHandler` et la commande en paramètre.
 
+Les commandes ne doivent être traitées que par un seul et unique handler.
+
 ##### Command dispatch interception & validation
 Il est possible de valider des commandes avant qu'elles arrivent au niveau des handlers. Pour cela, il faut implémenter `MessageDispatchInterceptor` et enregistrer la class.
 
@@ -130,6 +132,8 @@ Les event handlers ont deux modes de récupération des events :
 * Tracking : qui est le mode par défaut. Cela créé un thread par event handler (non event sourcing handler) avec un mode 'pull'
 * Subscription : qui n'ouvre qu'un seul thread pour tous les event handlers (non event sourcing handler) appartenant aux class ayant l'annotation `@ProcessingGroup(<NomDuProcessor>)` avec le même nom de processeur. Ce mode de récupération d'events permet notamment d'appliquer des mécanismes de rollback dans le cas où un event handler échoue, tous les autres vont échouer et la transaction jusqu'à la command est rollback. Il n'y aura donc pas d'event enregistré dans l'event store.
 
+Il faut également ajouter une configuration dans `application.yml` pour définir le mode d'écoute, par exemple : `axon.eventhandling.processors.<processorName>.mode: subscribing|tracking`. Les `@ProcessingGroup` ne sont pas forcément lié à des modes d'écoute subscription.
+
 
 ### Exception management
 // TODO
@@ -139,6 +143,7 @@ Les event handlers ont deux modes de récupération des events :
 * Si une exception est lancée depuis un commandhandler, même si l'exception est de type Exception, il s'agira une d'exception de type `CommandExecutionException` qui sera lancée
 * `@ExceptionHandler` de Axon permet de catcher les exceptions. Il faut coupler l'annotation avec une classe qui implémente `ListenerInvocationErrorHandler` pour qu'Axon soit capable de rollback la transaction. Il faut noter rethrow l'exception. Il faut également enregistrer le listener afin de le binder au processing group.
 * CommandInterceptor, EventInterceptor, BeanValidation (with Hibernate validation par exemple)
+
 
 ### Saga/Process
 Afin de synchroniser les aggregats, Axon propose les Saga. Le pattern Saga permet de faire des opérations transactionnelles au sein d'une architecture microservices. Il existe deux formes :
@@ -159,57 +164,95 @@ Pour finir un process Saga, il faut annoter un ou plusieurs méthodes par `@EndS
 Les méthodes de Saga, les annotations, ont le paramètre `associationPropery` qui définir l'attribut de correlation de la Saga. Il est conseillé d'utiliser un aggregate identifier.
 
 #### Deadlines
-// TODO
-* Les deadlines permettent de gérer le temps pour finir une saga ou la faire avancer. Deadline is an Event that takes place of an absence of an event.
-* Par exemple, si on attend un événement dans les x heures et qu'il n'arrive pas, une deadline peut être trigger pour démarrer un flow de compensation
-* Les deadlines peuvent être dans les saga ou les aggregats
-* Trigger a state change or a command
-* Ce n'est pas sourced : un deadline event n'est pas enregistré dans l'event store
-* Deadlinemanager
-    * Simple deadline manager : keeps scheduled tasks in memory (si la jvm est redémarrée, les deadlines sont perdues)
-    * QuartzDeadlineManager : sauvegarde les deadlines en base. préféreable pour les deadlines longues par exemple 72 heures. S'appuie sur QuartzScheduler qui est hors Axon mais une dépendance supplémentaire
-* `deadlineManager.schedule(<time>, "deadline-name", event)` & `@DeadlineHandler(deadlineName = "deadline-name")`
-* Deadline scope : le scope où le résultat de la deadline doit être traité (par défaut dans le même fichier)
-* Il ne faut pas oublier de cancel les deadlines sinon elles peuvent se redeclencher
-* La déclaration d'une deadline retourne un ID qui permet de cancel une deadline en particulier
+Une Saga est un process asynchrone qui peut plusieurs du temps à avancer et se terminer. Par exemple, un process de paimeent n'est pas forcément immédiat mais peut dépendre de l'utilisateur qui doit valider la transaction auprès de sa banque.
+
+Il est possible d'annuler une Saga ou de modifier le process dans le cas où une étape dépasse un temps limite. Pour cela, il existe les deadlines. Une deadline est le lancement d'un event dans le cas où un event n'arrive pas. Ainsi on peut démarrer un process de compensation.
+
+Les deadlines peuvent être définie dans les Saga ou les aggregats. Les events des deadlines ne sont pas event sourced et ne sont donc pas enregistrés dans l'event store.
+
+La mise en place d'une deadline requiert un deadline manager. Il existe plusieurs types :
+* Simple deadline manager : permet d'avoir les tâches de surveillance en mémoire mais si la JVM redémarre, les dealines sont perdues
+* QuartzDeadlineManager : sauvegarde les deadlines en base, ce qui est préférable pour les deadlines qui sont longues. Ce manager s'appuie sur `QuartzScheduler` qui est une dépendance supplémentaire.
+
+La création d'une deadline se fait au sein d'un handler via `deadlineManager.schedule(<timeout>, <deadlineName>, event)`. Le dernier paramètre `event` est un payload qui est transmis au deadline handler. Cela permet d'avoir un context au sein du handler. Pour gérer l'activation d'une deadline, il faut une fonction annotée avec `@DeadlineHandler(deadlineName = <deadlineName>)`. 
+
+La définition d'une deadline retourne un ID qui permet d'annuler une deadline individuellement via la méthode `deadlineManager.cancelSchedule(<deadlineName>, <deadlineId>)`. Il est également possible d'annuler toutes les deadlines portant le même nom via `deadlineManager.cancelAll(<deadlineName>)`. Il est important de noter que toute deadline lancée doit être annulée au risque d'avoir une boucle d'event de deadline lancés.
+
+Attention : le résultat de la deadline doit être traité dans le même fichier (l'event ou la commande lancée par la deadline).
 
 
-### Subscription query
-// TODO
-* En CQRS nous sommes en eventual consistency
-* Subscription queries permet de retourner le résultat courant et si un changement arrive, notifie le client avec l'update. Ceci jusqu'à ce qu'il y ait un cancel de subscription
-* Par exemple
-    * S'il y a une UI,
-        1. client envoie une command
-        2. si la command est successfull, envoyer une subscription query
-        3. quand le saga flow a fini
-        4. envoyer une update
-    * Si no UI (par exemple avec postman)
-        1. Inject query gateway dans le controller
-        2. Si la command est successfull, query gateway envoie une subcription query
-        3. Envoie la data à jour
-* L'object `QueryUpdateEmitter` permet d'émettre des changements liés pour une query avec `queryUpdateEmitter.emit`
+### Query
+La lecture de projection peut être fait classiquement ou alors via des utilitaires Axon.
+
+Pour la récupération de projections, Axon propose les `Query` qui sont des POJO envoyés dans une `QueryGateway` et interceptées par des fonctions qui ont l'annotation `@QueryHandler`. Une query peut avoir plusieurs handlers.
+
+#### Subscription query
+Etant donné que la query est en eventual consistency, la récupération de projection peut produire des résultat non à jour. Afin de pallier à ce problème, Axon propose les subscription query. Attention, celles-ci ne fonctionnent que si la partie query est dans le même déployable que la partie command.
+
+Une subscription query permet de retourner le résultat courant et si un changement arrive, le client est notifié avec la mise à jour. Et ce jusqu'à ce qu'il y a une annulation de la subscription.
+
+Deux pattern peuvent être mis en place :
+* Si le client est un UI
+    1. Le client envoie une command
+    2. Si la command est en succès, le client envoie une subscription query
+    3. Quand le process est fini (par exemple la Saga), la subscription envoie un update
+* Si le client n'a pas d'UI (par exemple via Postman ou un client HTTP)
+    1. Injecter la query gateway dans le controller de la command
+    2. Si la command est en succès, la query gateway envoie une subscription query
+    3. La projection à jour est envoyée
+
+Pour notifier des changement dans une projection, il faut utiliser l'objet `QueryUpdateEmitter` et la fonction `queryUpdateEmitter.emit`.
+
 
 ### Replay
-// TODO
-* Le principe est de relire tous les events du store pour relancer tous les `@EventHandler` et reconstruire les projections
-* Supporté par le Tracking Event Processor
-* Possible de rajouter des `@DisallowReplay` pour exlure des event handler du replay
-* Avant de lancer un replay, il faut arrêter le tracking event processor pour éviter qu'il soit dans un état non départ
-* `@ResetHandler` permet de lancer une action avant le début du replay
-* Les sagas ne sont pas replaybale par défaut
-* Les event processor subscribing ne peuvent être utilisé pour du replay
-* A priori il est préférable de ne pas être en mode subscription (sinon pas possible de replay)
+Il arrive qu'il y ait besoin de 'rejouer' tous les événements et les renvoyer dans les `@EventHandler`. Plusieurs cas peuvent demander un replay, par exemple :
+* Une projection évolue
+* Une désynchronisation est arrivée
+
+Axon propose un mécanisme de replay, lancé par des tracking processors. Cela implique que les subscription processors ne peuvent pas être utilisés pour un replay.
+
+Un replay est lancé dans un thread séparé car lancé par un tracking processor. Les Saga ne sont pas 'replayables'.
+
+Pour lancer un replay, il faut utiliser la dépendance `EventProcessingConfiguration` et lancer la méthode `eventProcessingConfiguration.eventProcessor(<processorName>, TrackingProcessor::class)`. Le processor name est un nom de processor définit dans la configuration de l'application. Un processor définit par `@ProcessingGroup` peut être utilisé.
+
+Puis, le process de lancement est :
+```
+eventProcessingConfiguration.eventProcessor(<processorName>, TrackingProcessor::class)
+.map {
+    it.shutDown()
+    it.resetTokens()
+    it.start()
+}
+```
+
+A noter que le token dans `resetTokens()` est un token de suivi des events. Avant le reset token, celui du processor doit être au niveau du dernier event et à la fin du replay également.
+
+Il est préférable d'utiliser un processor de replay dédié dans le cas ou il échoue et que le token ne soit pas à la fin.
+
+Il est possible d'exclure certains event handler du replay en les annotant par `@DisallowReplay`. Il est également possible d'effectuer des traitement avant le lancement du replay avec une function annotée par `@ResetHandler`.
 
 
 ### Snapshot
-// TODO
-* Permet de créer une image tous les x events d'un aggregat
-* Un snapshot est un event
-* Paramétrage :
-    * regular intervals
-    * after x events
-    * when loading takes longer than specified time
+Lorsque dans une application, il y a beaucoup d'events, celle-ci peut souffir de problèmes de performance. En effet, à chaque traitement de command, Axon a besoin de connaître l'état courant d'un aggregat. Pour cela, il a besoin de lire tous les événements de l'aggregat afin de construire sont état. Même si Axon garde en mémoire tous les aggregats, il peut y avoir des problématiques de temps de démarrage.
+
+Pour palier à ce problème, Axon propose les snapshots qui sont des états intermédiaires des aggregats. Axon va partir du dernier snapshot d'un aggregat pour le reconstruire. Un snapshot est un event mais qui est stocké dans une table à part.
+
+Les snapshots peuvent être créés selon plusieurs critères :
+* A chaque intervalle de temps
+* Après N events
+* Quand on détecte un chargement d'aggregat dépassant un temps spécifié
+
+Pour créer des snapshots, il faut définir un nom de snapshot et utiliser un snapshotter :
+```
+@Bean(name = ["productSnapshotTriggerDefinition"])
+fun productSnapshotTriggerDefinition(snapshotter: Snapshotter): SnapshotTriggerDefinition {
+    // 3 is the number of events after to create a snapshot
+    return EventCountSnapshotTriggerDefinition(snapshotter, 3)
+}
+```
+
+Puis dans la définition de l'aggregat à snapshotter, il faut ajouter le nom du trigger dans son annotation `@Aggregate(snapshotTriggerDefinition = "productSnapshotTriggerDefinition")`.
+
 
 ### Testing
 // TODO
