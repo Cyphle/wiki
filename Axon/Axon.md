@@ -229,3 +229,4 @@ Etant donné qu'avec Axon, les applications sont en Event Sourcing, tout l'histo
 
 # NOTES
 * A tester, est-ce que le replay lit tous les événements, mêmes ceux qui ne sont pas dans le processing group ? ou alors il faut lancer le replay de tous les processing group ?
+* Exemple sous forme de tuto à faire
