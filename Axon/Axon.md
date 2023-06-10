@@ -10,6 +10,7 @@ Pour le stockage des événements, AxonIQ propose sa solution Axon Server mais i
 ## Architectures et conception
 
 ### Domain Driven Design
+------
 Le Domain Driven Design a été mis sur papier par Eric Evans dans son "Blue Book". Parmis tous les principes listés, deux sont primordiaux à retenir :
 * Ubiquitous language : il est capital de définir une language commun pour faciliter l'ensemble de la chaîne de production d'un logiciel. Le language commun le plus naturel à adopter est le language métier. Il faut donc que l'ensemble des concepts métier nécessaire se retrouvent dans les logiciels.
 * Bounded Context : un logiciel sera plus évolutif et plus maléable si son découpage respecte des frontières qui sont définies par les domaines métier. Qu'il s'agisse de monolithes ou d'architectures microservices, avoir un découpage métier permettra de plus facilement faire évoluer un métier et d'éviter de le dupliquer.
