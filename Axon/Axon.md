@@ -260,6 +260,7 @@ Puis dans la définition de l'aggregat à snapshotter, il faut ajouter le nom du
 * https://discuss.axoniq.io/t/starting-axon-server-using-testcontainers-from-a-springboottest-port-conflict/2166
 * https://androidexample365.com/running-axon-server-in-testcontainers-tests/
 * https://github.com/holixon/axon-server-testcontainer
+* https://docs.axoniq.io/reference-guide/axon-framework/testing
 
 
 ### Audit trail
