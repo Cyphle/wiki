@@ -143,13 +143,15 @@ Il faut également ajouter une configuration dans `application.yml` pour défini
 
 ### Exception management
 ------
-// TODO
-* With tracking mode, un event en erreur est retry avec une back-off period avec un maximum de 60s timeout
-* With subscribing mode, une erreur peut être remontée au haut de la chaîne pour rollback la transaction
-* Si une exception est lancée dans un command handler, la transaction est rollback
-* Si une exception est lancée depuis un commandhandler, même si l'exception est de type Exception, il s'agira une d'exception de type `CommandExecutionException` qui sera lancée
-* `@ExceptionHandler` de Axon permet de catcher les exceptions. Il faut coupler l'annotation avec une classe qui implémente `ListenerInvocationErrorHandler` pour qu'Axon soit capable de rollback la transaction. Il faut noter rethrow l'exception. Il faut également enregistrer le listener afin de le binder au processing group.
-* CommandInterceptor, EventInterceptor, BeanValidation (with Hibernate validation par exemple)
+Un event qui est en mode tracking, s'il rencontre une erreur, il y a un retry avec une back-off period et un maximum de 60s de timeout.
+
+En mode subscribing, il est possible de rollback l'ensemble de la transaction jusqu'à la commande. Pour cela, il faut implémenter `ListenerInvocationErrorHandler` et relancer l'exception.
+
+Plusieurs type d'exception peuvent être lancées et catchées. 
+* Du côté des event handlers, une fonction peut être annotée par `@ExceptionHandler(resultType = <TypeException>)`
+* Utiliser des controller advice, qui est un mécanisme de Spring
+
+A noter que si une exception est lancée depuis un command handler, son type sera toujours `CommandExecutionException`.
 
 
 ### Saga/Process
@@ -279,10 +281,6 @@ Puis dans la définition de l'aggregat à snapshotter, il faut ajouter le nom du
 ------
 Etant donné qu'avec Axon, les applications sont en Event Sourcing, tout l'historique des événements est disponible pour créer un audit trail. Cependant, il n'est pas conseillé de lire directement l'event store pour cela. Une meilleure pratique est de créer une projection pour l'audit trail.
 
-
-### Configuration
-------
-// TODO
 
 
 # NOTES
