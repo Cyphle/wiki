@@ -79,6 +79,15 @@ Pour Relational Database Service.
 * Can use policy conditions to restrict access to IP, specific date or to require SSL/MFA
 
 ## Encryption
+* In transit, use SSL/TLS
+    * Clients must trust AWS Root CA (have to download certificate from AWS)
+    * Enforce SSL: for example with Postgresql rds.force_ssl=1
+* At rest, support AES-256 encryption
+    * Use KMS
+    * Encrypt master and read replicas
+    * Must defined at launch time
+* Canot encrypt existing unencrypted DB nor cannot create encrypt read replica from unencrypted instance
+    * To encrypt an unencrypted snapshot, take a snapshot, copy with encryption and then restore
 
 ## Credentials rotation
 * It is a best practice
@@ -88,9 +97,48 @@ Pour Relational Database Service.
 * Integrates with RDS for MySQL, PostgreSQL and Aurora
 
 # Backups & snapshots
+* Can copy full backups and snapshots
+* Can copy cross account : share snapshot and then copy
+* Can copy cross regions
+* When encrypted, copy snapshot with custom key, then share key and then share snapshot (default KMS key cannot be shared)
+* Snapshots cannot be shared with some options like TDE (transparent data encryption for Oracle)
+* Restored cluster gets applied with
+    * New security group
+    * Default parameter group
+    * Option group that was associated with the snapshot
+* PITR recovery
+    * Can only restore to a new instance
+    * Backup retention period controls the PITR window
+    * Can restore to any point in time during your backup retention period
+    * RDS uploads DB transaction logs to S3 every 5min
+* Exporting to S3
+    * Runs in background
+    * Doesn't affect performance
+    * Exported in Apache Parquet format (compressed and consistent)
+    * Allows to analyse in Athena or Redshift
+
+## Backups
+* Supports automatic backups
+* Capture transaction logs in real time
+* Can specify backup window
+* Can modify retention period to 35 days
+* First backup is a full backup and next are incremental
+* Stored in S3 owned and managed by RDS (cannot see them in console)
+* Can experience brief IO suspension
+* Recommended to use multi AZ option to avoid performance issues
+* Integrates for AWS backup service for centralized
+* Support PITR (point in time recovery)
+* Can only restore a new instance of RDS. To keep the same name, have to rename existing one
+
+## Snapshots
+* Manually created
+* Full backup, no incremental
+* Retention has no limit
+* Does not support PITR
+* Can use lambda tu take periodic backups and another one to move to S3
 
 # Notes
-* One RDS instance is one instance of database
+* One RDS instance can have one or more DBs
 * AWS RDS est compatible avec : PostGreSQL, MariaDB, MariaDB, Oracle, SQL Server, Aurora
 * Il s'agit d'un service managé
 * Les instances sont lancés dans un VPC
