@@ -137,6 +137,41 @@ Pour Relational Database Service.
 * Does not support PITR
 * Can use lambda tu take periodic backups and another one to move to S3
 
+## Multi AZ
+* High availability, data durability, fault tolerance
+* Not used for scaling because second instance is passive (standby)
+* SYNC replication to standby
+* Automatic failover when planned or unplanned outage of master
+* Uses DNS routing to point to master and new master so no need to update connection string
+* Failover times (RTO) are typically 60-120s
+* Automatic backups are taken from standby and not master anymore (to optimise performance)
+
+## Read replicas
+* Read only copy
+* To segregate read workload
+* Up to 5 read replicas
+* Within AZ, cross AZ or cross region
+* ASYNC replication so reads are eventually consistent
+* Master still offers read possibility
+* Different connection string between read and write
+* Read replica can be promoted to primary (manual process)
+* Must enable automatic backup to use read replicas
+* A read replica can have its own standby instance
+* Use cases:
+    * Need for analytics, only read is needed
+    * Performance
+* When promoting a read replica to a master, it will be detached of process of replication and works as standalone instance
+* Cannot promote a read replica when backup is in progress
+* Use cases of promotion:
+    * Disaster recovery
+    * Avoir performance penalty of DDL operations (like rebuilding indexes)
+    * Sharding
+* Enabling writes on a read replica for MySQL/MariaDB, set read-only = 0 for read replica
+* Capabilities:
+    * Can use snapshot to perform PITR of a read replica
+    * Can create replica from an existing replica (sync will be master -> replica 1 -> replica 2)
+* By default, backups are disabled for read replicas
+
 # Notes
 * One RDS instance can have one or more DBs
 * AWS RDS est compatible avec : PostGreSQL, MariaDB, MariaDB, Oracle, SQL Server, Aurora
