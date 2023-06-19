@@ -170,7 +170,57 @@ Pour Relational Database Service.
 * Capabilities:
     * Can use snapshot to perform PITR of a read replica
     * Can create replica from an existing replica (sync will be master -> replica 1 -> replica 2)
-* By default, backups are disabled for read replicas
+* By default, backups are disabled for read 
+* Cross region
+    * Supported by MariaDB, MySQL, Oracle, PostgreSQL and NOT SQL Server
+    * Enhanced DR capability
+    * Scale read operations closer to the end users
+    * Limitations :
+        * Higher replication lag time
+        * Max 5 cross region replicas
+* It is possible to create a read replica with any external database like on premise databases
+    * Supported by MySQL and MariaDB
+    * Use mysqldump and mysqlimport
+    * Can create backup of read replica with percona xtrabackup and then can restore on premise from S3 and start replication
+
+## Disaster recovery strategy
+* Multi AZ can't protect from logical DB corruption and malicious attacks, etc
+* Key metrics
+    * RTO : Recovery time objective (downtime between disaster and recovery in hours)
+    * RPO : Recovery point objective (amount of data loss, example data between last backup and disaster in hours)
+* RDS PITR offers RPO is typically of 5min
+* Strategies
+    * Automated backups
+    * Manual snapshots
+    * Read replicas
+* Failover to an RDS read replica is a manual process
+* A good DR plan should include a combination of all strategies
+
+## Troubleshooting high replica lad and error
+* Asynchronous logical replication typically results in replica lag
+* Can monitor ReplicaLag metrics in CloudWatch with for instance Seconds_Behind_Master
+* Possible reasons:
+    * Long running queries on primary instance
+    * Insufficient instance class size or storage
+    * Parallel queries executed on the primary instance
+* Recommendations:
+    * Size of replica has to match the source DB (storage and instance class)
+    * Compatible DB parameter group
+* Can monitor replication state
+* If replication state = Error, details in the Replication Error field
+* Can subscribe RDS events
+* If read replica has read_only=0, then can write on read replica. Only for maintenance tasks like creating indexes only on replica. Then reset to read_only=1 and avoid breaking compatibility with source
+* Replication is only supported with transactional storage engines like InnoDB (engines like MyISAM will cause replication errors)
+* Using unsafe nondeterministic queries such as SYSDATE() can break replication
+* Can skip errors or delete and recreate read replica
+* Errors or data inconssistencies
+    * Can happen due to binlog events or InnoDB redo logs aren't flushed during a replica or source instance failure
+    * Must manually delete and recreate the replica
+* Preventive recommendations
+    * sync_binlog=1
+    * innodb_flush_log_at_trx_commit=1
+    * innodb_support_xa=1
+    * Settings can reduce performance
 
 # Notes
 * One RDS instance can have one or more DBs
