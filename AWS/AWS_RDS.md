@@ -137,7 +137,7 @@ Pour Relational Database Service.
 * Does not support PITR
 * Can use lambda tu take periodic backups and another one to move to S3
 
-## Multi AZ
+# Multi AZ
 * High availability, data durability, fault tolerance
 * Not used for scaling because second instance is passive (standby)
 * SYNC replication to standby
@@ -146,7 +146,7 @@ Pour Relational Database Service.
 * Failover times (RTO) are typically 60-120s
 * Automatic backups are taken from standby and not master anymore (to optimise performance)
 
-## Read replicas
+# Read replicas
 * Read only copy
 * To segregate read workload
 * Up to 5 read replicas
@@ -183,19 +183,6 @@ Pour Relational Database Service.
     * Use mysqldump and mysqlimport
     * Can create backup of read replica with percona xtrabackup and then can restore on premise from S3 and start replication
 
-## Disaster recovery strategy
-* Multi AZ can't protect from logical DB corruption and malicious attacks, etc
-* Key metrics
-    * RTO : Recovery time objective (downtime between disaster and recovery in hours)
-    * RPO : Recovery point objective (amount of data loss, example data between last backup and disaster in hours)
-* RDS PITR offers RPO is typically of 5min
-* Strategies
-    * Automated backups
-    * Manual snapshots
-    * Read replicas
-* Failover to an RDS read replica is a manual process
-* A good DR plan should include a combination of all strategies
-
 ## Troubleshooting high replica lad and error
 * Asynchronous logical replication typically results in replica lag
 * Can monitor ReplicaLag metrics in CloudWatch with for instance Seconds_Behind_Master
@@ -222,6 +209,116 @@ Pour Relational Database Service.
     * innodb_support_xa=1
     * Settings can reduce performance
 
+## Performance
+* With new replica, it may be slow because EBS volume loads lazily in the background and some data are not copied until queried
+* Can initiate VACUUM ANALYZE in postgresql
+* Another reason can be an empty buffer pool (cache for table and index data)
+
+## Disaster recovery strategy
+* Multi AZ can't protect from logical DB corruption and malicious attacks, etc
+* Key metrics
+    * RTO : Recovery time objective (downtime between disaster and recovery in hours)
+    * RPO : Recovery point objective (amount of data loss, example data between last backup and disaster in hours)
+* RDS PITR offers RPO is typically of 5min
+* Strategies
+    * Automated backups
+    * Manual snapshots
+    * Read replicas
+* Failover to an RDS read replica is a manual process
+* A good DR plan should include a combination of all strategies
+
+# Scaling and sharding
+* Scaling up with standby starts with standby then failover and then scale primary
+* Sharding is not supported at RDS level
+
+# Monitoring
+* Common metrics
+    * CPU
+    * RAM
+    * Disk
+    * Network
+    * Connections
+    * IOPS
+* Native logs/extensions
+    * pgaudit for PostgreSQL for auditing (DML, DCL, DDL, etc)
+* Manual monitoring tools
+    * Trusted advisor (cost optimization, security, fault tolerance, performance improvement checks)
+    * CloudWatch
+    * RDS console
+* Automated tools
+    * RDS event notifications
+    * Database logs
+    * CloudWatch
+    * Enhanced Monitoring
+    * Performance Insight
+    * RDS Recommendations
+    * CloudTrail (RDS API calls viewed in CloudTrail or S3)
+* Up to 90 days of activity
+
+## RDS event notifications / event subscriptions
+* Available within RDS console
+* Create CloudWatch alarms
+* Send alarm notifications to an SNS topic (email / SMS / etc)
+* Can subscribe to RDS events
+* Event sources can be snapshots, instances, security groups, parameter groups, clusters, cluster snapshots, etc
+* Events examples : creation, deletion, ...
+
+## RDS recommendations
+* Periodic automated suggestions for instances, red replicas and DB parameter groups
+
+## RDS Logs
+* In RDS console
+* Can exports to CloudWatch logs
+* CloudWatch logs do not expire. To do so, set log group retention policy
+* Logs
+    * Listener logs
+    * Trace log
+    * Error log
+    * Postgresql log
+    * Upgrade log
+    * General log
+    * Slow query log
+* Export to S3 via console, CLI or API
+* Transaction logs cannot be accessed from S3
+* Create an export task in CloudWatch or use lambda or aws sdk
+
+## Enhanced monitoring
+* To analyze real time OS level metrics (CPU, memory usage, etc)
+* To monitor different processes or threads that are using CPU
+* Helps identify performance issues
+* Increased granunluraty of 1 to 60 seconds
+* Requires an agent to be installed on DB server to collect metrics
+
+## Performance Insights
+* Visual dashboard for performance tuning, analysis and monitoring
+* Monitor DB load for the instance (if multiple DB, see aggregated metrics)
+* DB load: average number of active sessions (AAS)
+    * AAS < 1 : not blocked
+    * AAS = 0 : idle
+    * AAS < MAX CPU : CPU is available
+    * AAS > Max CPU : Performance issues
+    * AAS >> Max CPUs : performance bottleneck
+* Performance problems will appear as spikes in the DB load graph
+* Helps identify performance bottlenecks, expensives requests
+* IO:XactSync is a wait state in PostgreSQL where a session is issuing commit / rollback and rds Aurora is waiting for storage to acknowledge persistence
+* Automatically publishes metrics to CloudWatch
+* Easily integrated with on premise or third party monitoring tools
+
+## CloudWatch Application Inights
+* Tool for .NET and SQL Server
+* Also supports DynamoDB tables
+* Identifies and sets up key metrics, logs and alarms for SQL Server workloads
+* Uses CloudWatch events and alarms
+
+# RDS on VMWare
+* Lets you deploy RDS DBs in on premises VMWare environments (VMWare vSphere)
+* Use RDS connector over VPN tunnel
+* Supports MySQL, PostgreSQL and SLQ server
+* Fully managed DBs
+* Manual and automatic backups with PITR
+* Health monitoring
+* Can use ClouWatch for monitoring
+
 # Notes
 * One RDS instance can have one or more DBs
 * AWS RDS est compatible avec : PostGreSQL, MariaDB, MariaDB, Oracle, SQL Server, Aurora
@@ -246,7 +343,8 @@ Pour Relational Database Service.
     3. `wget https://s3.amazonaws.com/rds-downloads/rds-ca-2019-root.pem`
     4. `export PGPASSWORD="${aws rds generate-db-auth-token --hostname=<endpoint> --port=5432 --username=<user> --region <region>}"`
     5. Connect with some tool passing the certificate
-
+* For Oracle and SQL Server, automatic backups or manual snapshots are not supported on the replica
+* For PostgreSQL only manual snapshots are supported on the replica
 
 
 * Automatically modify storage if
