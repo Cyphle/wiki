@@ -351,6 +351,8 @@ Il est possible de mocker les callback du command handler
 
 Pour injecter les dépendances d'une Saga, il faut utiliser `fixture.registerResource()`.
 
+Il est aussi possible d'injecter un mock command gateway afin de contrôler son comportement. Si un mock command gateway est utilisé, il faut définir des `CallbackBehavior` sinon les callback ne seront pas invoqués.
+
 
 ### Audit trail
 ------
