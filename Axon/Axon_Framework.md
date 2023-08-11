@@ -271,13 +271,83 @@ Puis dans la définition de l'aggregat à snapshotter, il faut ajouter le nom du
 
 ### Testing
 ------
-// TODO
-(unit, integration, jgiven/acceptance) 
-* https://discuss.axoniq.io/t/starting-axon-server-using-testcontainers-from-a-springboottest-port-conflict/2166
-* https://androidexample365.com/running-axon-server-in-testcontainers-tests/
-* https://github.com/holixon/axon-server-testcontainer
-* https://docs.axoniq.io/reference-guide/axon-framework/testing
 
+#### Aggregate testing
+Axon fournit une librairie de test `axon-test` qui permet d'écrire des tests `given when then`.
+
+Un example de test simple d'aggregat
+```
+@Test
+    fun `should create product`() {
+        fixture
+            .givenNoPriorActivity()
+            .`when`(
+                CreateProductCommand(
+                    productId = "123",
+                    title = "Test",
+                    price = 10.0.toBigDecimal(),
+                    quantity = 10
+                )
+            )
+            .expectSuccessfulHandlerExecution()
+            .expectEvents(
+                ProductCreatedEvent(
+                    productId = "123",
+                    title = "Test",
+                    price = 10.0.toBigDecimal(),
+                    quantity = 10
+                )
+            )
+    }
+```
+
+##### Configuration
+Avant d'exécuter des tests, il est possible de configurer un environnement (repositories, etc) : https://docs.axoniq.io/reference-guide/axon-framework/testing/commands-events#test-setup
+
+##### Given
+Durant la phase given, il est possible de définir l'état d'un aggregat : https://docs.axoniq.io/reference-guide/axon-framework/testing/commands-events#given-phase
+
+Attention, si des commandes ou events sont lancées durant cette phase, ils sont ignorés.
+
+##### When
+Durant la phase when, il est possible d'exécuter des commandes, de faire avancer le temps ou d'appeler des méthodes d'aggregat : https://docs.axoniq.io/reference-guide/axon-framework/testing/commands-events#test-execution-phase
+
+##### Then
+Durant la phase then, il est possible de valider l'émission d'events, d'état ou de deadlines : https://docs.axoniq.io/reference-guide/axon-framework/testing/commands-events#validation-phase
+
+#### Saga testing
+Les Saga se testent de la même manière que les aggregats. Durant la phase given, si des commandes sont émises, elles seront ignorées. Il s'agit d'une phase purement de setup.
+
+Un exemple simple
+```
+@Test
+    fun `should place an order`() {
+        fixture
+            .givenAggregate("product-1")
+            .published(ProductCreatedEvent("product-1", "Product 1", BigDecimal(100), 1))
+            .whenPublishingA(OrderCreatedEvent("order-1", "product-1", "user-1", 1, "address", OrderStatus.CREATED))
+            .expectActiveSagas(1)
+            .expectDispatchedCommands(
+                ReserveProductCommand("product-1", 1, "order-1", "user-1")
+            )
+    }
+```
+
+Il est possible de mocker les callback du command handler
+```
+@BeforeEach
+    fun setUp() {
+        fixture
+            .setCallbackBehavior { any, metaData ->
+                // Mock callback of command handler
+//                if (any is ReserveProductCommand) {
+
+//                } else {
+
+//                }
+            }
+    }
+```
 
 ### Audit trail
 ------
