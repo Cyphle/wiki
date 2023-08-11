@@ -349,6 +349,9 @@ Il est possible de mocker les callback du command handler
     }
 ```
 
+Pour injecter les dépendances d'une Saga, il faut utiliser `fixture.registerResource()`.
+
+
 ### Audit trail
 ------
 Etant donné qu'avec Axon, les applications sont en Event Sourcing, tout l'historique des événements est disponible pour créer un audit trail. Cependant, il n'est pas conseillé de lire directement l'event store pour cela. Une meilleure pratique est de créer une projection pour l'audit trail.
