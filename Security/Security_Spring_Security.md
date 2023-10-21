@@ -20,8 +20,11 @@ User
 soit on définit un bean définissant le password encoder
 ```
 @Bean
-fun passwordEncoder() PasswordEncoder {
+fun passwordEncoder(): PasswordEncoder {
 
 }
 ```
 Si on définit son propre password encoder, Spring va l'utiliser par défaut.
+
+## Authentication provider
+Un authentication provider permet de définir la méthode d'authentification (OAuth, OTP : one time password, etc). Avec Spring, il est possible d'avoir plusieurs authentication provider pour accepter plusieurs modes d'authentification.

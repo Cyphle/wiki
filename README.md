@@ -145,6 +145,8 @@ End User
 * [Spring Security](https://github.com/Cyphle/wiki/blob/main/Security/Security_Spring_Security.md)
 
 
+# [GraphQL](https://github.com/Cyphle/wiki/blob/main/GraphQL/GraphQL.md)
+
 # Cheat sheets
 
 * [Linux](https://github.com/Cyphle/wiki/blob/main/CheatSheets/CheatSheet_Linux.md)
