@@ -147,6 +147,8 @@ End User
 
 # [GraphQL](https://github.com/Cyphle/wiki/blob/main/GraphQL/GraphQL.md)
 * [Types](https://github.com/Cyphle/wiki/blob/main/GraphQL/GraphQL_Types.md)
+* [Resolvers](https://github.com/Cyphle/wiki/blob/main/GraphQL/GraphQL_Revolvers.md)
+* [Subscriptions](https://github.com/Cyphle/wiki/blob/main/GraphQL/GraphQL_Subscriptions.md)
 * [Apollo Server](https://github.com/Cyphle/wiki/blob/main/GraphQL/GraphQL_ApolloServer.md)
 
 # Cheat sheets
