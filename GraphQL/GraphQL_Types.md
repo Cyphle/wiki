@@ -26,80 +26,12 @@ Schemas define what data look like. They also describe operations query and muta
 * On object type can be filled by multiple data sources
 
 ### Query
-* When querying a graph, we have to tell which fields of an object are wanted or it won't work. It is not possible to tell "all".
-* Is a special object that defines all of the top level entry points for queries that clients execute
-* It is possible to query multiple entry points. For example
-```
-Schema:
-type Query {
-  books: [Book]
-  authors: [Author]
-}
-
-Query:
-query GetBooksAndAuthors {
-  books {
-    title
-  }
-
-  authors {
-    name
-  }
-}
-
-Result:
-{
-  "data": {
-    "books": [
-      {
-        "title": "City of Glass"
-      },
-      ...
-    ],
-    "authors": [
-      {
-        "name": "Paul Auster"
-      },
-      ...
-    ]
-  }
-}
-```
+* A query is a type of GraphQL
+* [Query](https://github.com/Cyphle/wiki/blob/main/GraphQL/GraphQL_Query.md)
 
 ### Mutation
-* Mutation type defines endpoints to write
-* Example
-```
-type Mutation {
-  addBook(title: String, author: String): Book
-}
-
-Usage:
-mutation CreateBook {
-  addBook(title: "Fox in Socks", author: "Dr. Seuss") {
-    title
-    author {
-      name
-    }
-  }
-}
-```
-* It is recommended to send back data including the one(s) that have been created/modified in the response
-* It is recommanded to have a mutation response interface that the returned objects implement
-```
-interface MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-}
-
-type UpdateUserEmailMutationResponse implements MutationResponse {
-  code: String!
-  success: Boolean!
-  message: String!
-  user: User
-}
-```
+* A mutation is a type of GraphQL
+* [Mutation](https://github.com/Cyphle/wiki/blob/main/GraphQL/GraphQL_Mutation.md)
 
 ### Input
 * Input types are used to define structure that can be passed inside endpoints of query and mutations
