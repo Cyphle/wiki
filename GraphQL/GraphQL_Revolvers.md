@@ -20,7 +20,7 @@ const resolvers = {
   },
 };
 ```
-* A resolver can optionally have 4 positional arguments
+* A resolver has 4 positional arguments
 ```
 const resolvers = {
   Query: {
@@ -42,6 +42,32 @@ type Query {
 ```
 `args` argument contains arguments provided for the field
 * Note that if field are obvious to resolve, it is not needed to define a resolver as there will be one be default (getter of object for instance)
+
+## Context
+* Allow to share context like authentication scope, sources of data
+* Third parameter of a resolver is a context to share context
+* Example with graphql yoga to initialize a context accessible in resolvers
+```
+// GraphQL Yoga
+const yoga = createYoga({
+  schema,
+  context: {
+    db
+  }
+});
+
+Query {
+  users(parent: any, args: any, ctx: any, info: any) {
+      if (!args.query) {
+        return ctx.db.users;
+      }
+
+      return ctx.db.users.filter((user: any) => {
+        return user.name.toLowerCase().includes(args.query.toLowerCase());
+      });
+    }
+}
+```
 
 ## Notes
 * When resolving subtypes, types define the relation and resolvers have to define how to resolve the relation
