@@ -40,3 +40,36 @@ const resolvers = {
   // ...other resolvers...
 };
 ```
+* It is possible to use an internal bus using PubSub
+```
+Type:
+type Subscription {
+    post: Post!
+}
+
+For subscription:
+post: {
+    subscribe: (parent: any, args: any, ctx: any, info: any) => {
+      return ctx.pubSub.subscribe('post');
+    }
+  }
+
+For publishing events
+ctx.pubsub.publish('post', {
+        post: {
+          mutation: 'CREATED',
+          data: post
+        }
+      });
+
+Usage:
+subscription {
+  post {
+    body
+  }
+}
+
+mutation {
+  createPost(...)
+}
+```
