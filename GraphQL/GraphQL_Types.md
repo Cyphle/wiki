@@ -54,6 +54,11 @@ type Mutation {
 * Enum values are serialized as string
 * Example:
 ```
+enum AllowedColor {
+  BLUE
+  GREEN
+}
+
 type Query {
   favoriteColor: AllowedColor # enum return value
   avatar(borderColor: AllowedColor): String # enum argument

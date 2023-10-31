@@ -155,6 +155,7 @@ End User
 
 
 # [ORM](https://github.com/Cyphle/wiki/blob/main/ORM/ORM.md)
+* [Prisma](https://github.com/Cyphle/wiki/blob/main/ORM/ORM_Prisma.md)
 
 # Cheat sheets
 
