@@ -2,6 +2,7 @@
 
 ## What is Prisma
 * Prisma is an ORM for NodeJS applications
+* Prisma has some plugins like Prisma Bindings to bind GraphQL types with Prisma Model (https://www.npmjs.com/package/prisma-binding)
 * Prisma has usefull tools such as migration and studio (GUI to explore database)
 * https://www.prisma.io/typescript
 
