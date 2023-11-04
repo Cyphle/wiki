@@ -205,3 +205,9 @@ const resolvers = {
 ## Directives
 * A directive is a decorator that can allow tools like Apollo Server to perform custom logic
 * Directives can only be applied where it is meant to be
+* For example
+```
+type {
+    id: ID! @unique # Means that ID should be unique
+}
+```
