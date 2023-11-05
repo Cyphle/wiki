@@ -74,3 +74,4 @@ main()
 ## Notes
 * Prisma uses the file schema.prisma to setup database connection and schema definitions. It does NOT support multiple schema files. For this, use ZenStack (https://github.com/zenstackhq/zenstack) which is an extention to prisma CLI
 * Prisma migration tool is REALLY limited. Like it is not possible to rename a column as it is based on reading the final state of the database model. If a column is renamed for example, Prisma will drop the old one and create the new one. To overcome this limitation, use other tools like Knex.js (https://knexjs.org/guide/migrations.html#migration-cli)
+* To define relations, it is needed to define in both entities and the one having the foreign key needs to define `@relation(fields: [authorId], references: [id])`
