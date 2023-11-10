@@ -143,6 +143,7 @@ End User
 
 # [Security](https://github.com/Cyphle/wiki/blob/main/Security/Security_General.md)
 * [Spring Security](https://github.com/Cyphle/wiki/blob/main/Security/Security_Spring_Security.md)
+* [PassportJS](https://github.com/Cyphle/wiki/blob/main/Security/Security_Passportjs.md)
 
 
 # [GraphQL](https://github.com/Cyphle/wiki/blob/main/GraphQL/GraphQL.md)
