@@ -18,8 +18,33 @@
     * Origin servers: 
     * CDN: can be placed between client and origin server to cache response
     * Edge: are like CDN but closer to end user (see AWS which propose deploying on Edges)
+* NextJS pre-render every page in advance. It generates HTML in advance
+    * It is possible to mix server side rendering and static site rendering
+    * Note that server side rendering is slower but a wiser choice when a page and conditionned by user requests
+* For prerendering pages with data
+    * Can use `getStaticProps` which is run at build time and tell NextJS to fetch data when prerendering the page. As the name says it, use it for static data not when depending on user requests. The method has to be in each page that uses it and only in pages.
+    * For data using server side depending on request, use `getServerSideProps`
+```
+export async function getServerSideProps(context) { // Context contain requested parameters
+  return {
+    props: {
+      // props for your component
+    },
+  };
+}
+```
+    * For other case, use normal strategy using client side rendering. It is still possible to optimize the requests with caching and other technics. Use `SWL`(https://swr.vercel.app/fr-FR) hook, it is a helper for these purposes built by NextJS team.
+```
+import useSWR from 'swr';
 
-## Concepts
+function Profile() {
+  const { data, error } = useSWR('/api/user', fetch);
+
+  if (error) return <div>failed to load</div>;
+  if (!data) return <div>loading...</div>;
+  return <div>hello {data.name}!</div>;
+}
+```
 * `Link` are used for client side navigation, handled by Javascript. `a` are server side navigation elements
 * NextJS optimize image rendering with `WebP`(https://developer.mozilla.org/fr/docs/Web/Media/Formats/Image_types#webp)
 * CSS Modules (https://nextjs.org/docs/pages/building-your-application/styling) allows to scope CSS at component level
