@@ -158,6 +158,8 @@ End User
 # [ORM](https://github.com/Cyphle/wiki/blob/main/ORM/ORM.md)
 * [Prisma](https://github.com/Cyphle/wiki/blob/main/ORM/ORM_Prisma.md)
 
+# [NextJS](https://github.com/Cyphle/wiki/blob/main/NextJS/NextJS.md)
+
 # Cheat sheets
 
 * [Linux](https://github.com/Cyphle/wiki/blob/main/CheatSheets/CheatSheet_Linux.md)
