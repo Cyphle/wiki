@@ -157,6 +157,7 @@ End User
 
 # [ORM](https://github.com/Cyphle/wiki/blob/main/ORM/ORM.md)
 * [Prisma](https://github.com/Cyphle/wiki/blob/main/ORM/ORM_Prisma.md)
+* [TypeORM](https://github.com/Cyphle/wiki/blob/main/ORM/ORM_TypeORM.md)
 
 # [NextJS](https://github.com/Cyphle/wiki/blob/main/NextJS/NextJS.md)
 

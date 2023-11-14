@@ -74,6 +74,36 @@ module.exports = {
 ```
 * To use Sass, simply install it `npm install -D sass`
 
+## Routing
+* For dynamic routing, have to implement a function that list the paths and a funciton to get data depending on path
+```
+export async function getStaticPaths() {
+  const paths = getAllPostIds();
+  return {
+    paths,
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({ params }) {
+  // Add the "await" keyword like this:
+  const postData = await getPostData(params.id);
+
+  return {
+    props: {
+      postData,
+    },
+  };
+}
+```
+* `getStaticPaths` runs at build time in production, for each request in dev
+* `fallback: true` in `getStaticPaths` means that if there is a 404, it will fallback to a page created by NextJS. See https://nextjs.org/docs/pages/api-reference/functions/get-static-paths#fallback-false
+
+## API Routes
+* NextJS allows to create API routes with files in `pages/api` and exporting `export default function handler(req:  http.IncomingMessage, res: http.ServerResponse) { }`
+* You should not fetch an API Route from `getStaticProps` or `getStaticPaths`. Instead, write your server-side code directly in `getStaticProps` or `getStaticPaths` (or call a helper function). See https://nextjs.org/docs/pages/building-your-application/data-fetching/get-static-props#write-server-side-code-directly
+* API Routes will not be part of client code.
+
 ## Tips
 * Use library such as clx (https://www.npmjs.com/package/clsx) to toggle classes
 ```
