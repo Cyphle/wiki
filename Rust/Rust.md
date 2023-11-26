@@ -43,6 +43,16 @@ loop {
 }
 ```
 
+## String
+* `let s = "Hello world"` is a string literal
+* `let s = String::from("Hello world")` is a string type | object
+* String literal and string object works differently. For instance
+```
+fn my_function(s: &String) // Accept String type and not literal
+
+fn my_function(s: $str) // Accept String literal and String type and String slice
+```
+
 ## Memory management - Ownership
 * Memory is managed through a system of ownership with a set of rules that the compiler checks
 * It is important to understand stack and heap with Rust
@@ -119,6 +129,98 @@ fn takes_and_gives_back(a_string: String) -> String { // a_string comes into
 
     a_string  // a_string is returned and moves out to the calling function
 }
+```
+* Use references to avoid move. `calculate_length` does not have ownership of s1
+```
+fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&s1);
+
+    println!("The length of '{}' is {}.", s1, len);
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+}
+```
+* References are immutable so we cannot change the value of a reference
+```
+fn main() {
+    let s = String::from("hello");
+
+    change(&s); <== throws an error
+}
+
+fn change(some_string: &String) {
+    some_string.push_str(", world");
+}
+```
+* But it is possible to use mutable references, it is done like variables
+```
+fn main() {
+    let mut s = String::from("hello");
+
+    change(&mut s);
+}
+
+fn change(some_string: &mut String) {
+    some_string.push_str(", world");
+}
+```
+* It is not possible to create multiple references of a mutable reference
+```
+  let mut s = String::from("hello");
+
+    let r1 = &mut s;
+    let r2 = &mut s; <== throws an error
+
+    println!("{}, {}", r1, r2);
+```
+* To make multiple references of a mutable reference, use block scopes
+* It is not possible to have immutable and mutable references in the same scope
+* There are implicit scopes. So it is possible to have immutable and mutable references if some references are not used anymore
+```
+    let mut s = String::from("hello");
+
+    let r1 = &s; // no problem
+    let r2 = &s; // no problem
+    println!("{} and {}", r1, r2);
+    // variables r1 and r2 will not be used after this point
+
+    let r3 = &mut s; // no problem
+    println!("{}", r3);
+```
+* Rust compiler ensures that there is no dangling reference
+
+## Slices
+* A slice contains reference to a part of a string
+```
+    let s = String::from("hello world");
+
+    let hello = &s[0..5];
+    let world = &s[6..11];
+```
+* It works with ASCII. For UTF8, to not store part of a character, see https://doc.rust-lang.org/book/ch08-02-strings.html#storing-utf-8-encoded-text-with-strings
+* With slice, it is not possible to change the original string
+```
+fn main() {
+    let mut s = String::from("hello world");
+
+    let word = first_word(&s);
+
+    s.clear(); // error!
+
+    println!("the first word is: {}", word);
+}
+```
+* It is also possible to create slices of other objects
+```
+let a = [1, 2, 3, 4, 5];
+
+let slice = &a[1..3];
+
+assert_eq!(slice, &[2, 3]);
 ```
 
 ## Macros
