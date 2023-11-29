@@ -325,6 +325,19 @@ fn main() {
     );
 }
 ```
+* 'Static' methods that don't have `self` as first parameter are called with `::`
+```
+impl Rectangle {
+    fn square(size: u32) -> Self {
+        Self {
+            width: size,
+            height: size,
+        }
+    }
+}
+
+Rectangle::square(32);
+```
 
 ## Debug
 * Struct can print information when debugging. Add `#[derive(Debug)]` and use `{:?}` or `{:#?}` as placeholder
