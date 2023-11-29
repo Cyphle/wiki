@@ -52,6 +52,8 @@ fn my_function(s: &String) // Accept String type and not literal
 
 fn my_function(s: $str) // Accept String literal and String type and String slice
 ```
+* String literal are on stack because size can be determined at compile time
+* String type are on heap because size cannot be determined at compile time
 
 ## Memory management - Ownership
 * Memory is managed through a system of ownership with a set of rules that the compiler checks
@@ -222,6 +224,125 @@ let slice = &a[1..3];
 
 assert_eq!(slice, &[2, 3]);
 ```
+
+## Struct
+* Declare
+```
+struct User {
+    active: bool,
+    username: String,
+    email: String,
+    sign_in_count: u64,
+}
+```
+* Use
+```
+fn main() {
+    let user1 = User {
+        active: true,
+        username: String::from("someusername123"),
+        email: String::from("someone@example.com"),
+        sign_in_count: 1,
+    };
+}
+```
+* Or mutable struct
+```
+fn main() {
+    let mut user1 = User {
+        active: true,
+        username: String::from("someusername123"),
+        email: String::from("someone@example.com"),
+        sign_in_count: 1,
+    };
+
+    user1.email = String::from("anotheremail@example.com");
+}
+```
+* It is possible to use shorthand when field name and parameter are the same (same behaviour as javascript)
+```
+fn build_user(email: String, username: String) -> User {
+    User {
+        active: true,
+        username,
+        email,
+        sign_in_count: 1,
+    }
+}
+```
+* Destructuring is possible. `..user1` has to come last to tell that remaining fields are from `user1`
+```
+fn main() {
+    // --snip--
+
+    let user2 = User {
+        email: String::from("another@example.com"),
+        ..user1
+    };
+}
+```
+* Struct can have unnamed fields. They are called `tuple struct`
+```
+struct Color(i32, i32, i32);
+struct Point(i32, i32, i32);
+
+fn main() {
+    let black = Color(0, 0, 0);
+    let origin = Point(0, 0, 0);
+}
+```
+* Struct can have no field. They are called unit like struct
+```
+fn main() {
+    let subject = AlwaysEqual;
+}
+```
+
+### Methods
+* Methods are functions that are declared inside a struct and receive `self` as first parameter (like in Python)
+```
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+}
+
+fn main() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        rect1.area()
+    );
+}
+```
+
+## Debug
+* Struct can print information when debugging. Add `#[derive(Debug)]` and use `{:?}` or `{:#?}` as placeholder
+```
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+
+println!("rect1 is {:?}", rect1);
+```
+* There is also the macro `dbg!(&rect1);` that prints in `stderr` instead of `stdout` like `println!`
+```
+dbg!(&rect1);
+```
+* `db!` macro takes ownership and returns it
 
 ## Macros
 * Calls with `!`. Example: `println!`. If call function `println`
