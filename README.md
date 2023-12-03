@@ -162,6 +162,9 @@ End User
 # [NextJS](https://github.com/Cyphle/wiki/blob/main/NextJS/NextJS.md)
 
 # [Rust](https://github.com/Cyphle/wiki/blob/main/Rust/Rust.md)
+* [Ownership](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Memory.md)
+* [Base - Struct and co](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Base.md)
+* [Organization - Packages, crates and co](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Organization.md)
 
 # Cheat sheets
 
