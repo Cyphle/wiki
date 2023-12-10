@@ -165,6 +165,7 @@ End User
 * [Ownership](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Memory.md)
 * [Base - Struct and co](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Base.md)
 * [Organization - Packages, crates and co](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Organization.md)
+* [Generic, Traits & Lifetime](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Generic.md)
 
 # Cheat sheets
 
