@@ -166,6 +166,7 @@ End User
 * [Base - Struct and co](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Base.md)
 * [Organization - Packages, crates and co](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Organization.md)
 * [Generic, Traits & Lifetime](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Generic.md)
+* [Test](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Test.md)
 
 # Cheat sheets
 
