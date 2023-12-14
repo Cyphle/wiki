@@ -13,6 +13,7 @@
 * `cargo new <project_name>` new cargo project
 * `cargo update` updates dependencies
 * `cargo doc --open` generates a doc of dependencies of current project
+* `cargo test` to run tests
 
 ## Principles
 * Rust is immutable by default. To tell a variable is mutable use `mut`
