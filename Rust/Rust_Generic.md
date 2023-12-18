@@ -279,6 +279,12 @@ impl<'a> ImportantExcerpt<'a> {
     }
 }
 ```
+* the lifetime parameters specify which argument lifetime is connected to the lifetime of the return value. In this case, we indicate that the returned vector should contain string slices that reference slices of the argument contents (rather than the argument query)
+```
+pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
+    vec![]
+}
+```
 
 ## Lifetime elision
 * Lifetime elision are some use cases integrated into the compiler that do not need lifetime. It is because the compiler knows how the references behave
