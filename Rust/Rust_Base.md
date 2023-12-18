@@ -30,6 +30,7 @@ fn my_function(s: $str) // Accept String literal and String type and String slic
 * String type are on heap because size cannot be determined at compile time
 
 ## Slices
+* Slices let you reference a contiguous sequence of elements in a collection rather than the whole collection. A slice is a kind of reference, so it does not have ownership.
 * A slice contains reference to a part of a string
 ```
     let s = String::from("hello world");
