@@ -169,6 +169,7 @@ End User
 * [Test](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Test.md)
 * [Rust Functional](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Functional.md)
 * [Cargo package manager](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Cargo.md)
+* [Smart Pointers](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_SmartPointers.md)
 
 # Cheat sheets
 
