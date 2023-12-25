@@ -168,8 +168,10 @@ End User
 * [Generic, Traits & Lifetime](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Generic.md)
 * [Test](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Test.md)
 * [Rust Functional](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Functional.md)
+* [Rust Object](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Object.md)
 * [Cargo package manager](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Cargo.md)
 * [Smart Pointers](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_SmartPointers.md)
+* [Concurrency & Parallelism](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Concurrency.md)
 
 # Cheat sheets
 
