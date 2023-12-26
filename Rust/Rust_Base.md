@@ -266,3 +266,78 @@ enum Option<T> {
         count += 1;
     }
 ```
+
+## Type alias
+* Rust allows for type alias
+```
+    type Kilometers = i32;
+
+    let x: i32 = 5;
+    let y: Kilometers = 5;
+
+    println!("x + y = {}", x + y);
+
+    type Thunk = Box<dyn Fn() + Send + 'static>;
+```
+
+## Never type
+* The never type is to tell a function will never return
+```
+fn bar() -> ! {
+    // --snip--
+}
+```
+* For instance `continue` has a never return type. When used, functions coerce to other type. Like this will return u32
+```
+        let guess: u32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+```
+* Other examples are `panic!` and `loop`
+```
+impl<T> Option<T> {
+    pub fn unwrap(self) -> T {
+        match self {
+            Some(val) => val,
+            None => panic!("called `Option::unwrap()` on a `None` value"),
+        }
+    }
+}
+
+    print!("forever ");
+
+    loop {
+        print!("and ever ");
+    }
+```
+
+## Dynamically sized type
+* If Rust cannot know the size of a type at compile time but need runtime, we cannot create something like 
+```
+    let s1: str = "Hello there!";
+    let s2: str = "How's it going?";
+```
+Because `str` does not have a know size. A solution is to use `&str` instead of `str`.
+* The golden rule of dynamically sized types is that we must always put values of dynamically sized types behind a pointer of some kind.
+* We can combine str with all kinds of pointers: for example, `Box<str>` or `Rc<str>`.
+* Every trait is a dynamically sized type we can refer to by using the name of the trait.
+* we mentioned that to use traits as trait objects, we must put them behind a pointer, such as `&dyn Trait` or `Box<dyn Trait>` (`Rc<dyn Trait>` would work too).
+* DSTs : Dynamically sized type
+* Rust automatically implement trait `Sized` for everything whose size is known at compile time
+```
+fn generic<T>(t: T) {
+    // --snip--
+}
+// is in fact
+fn generic<T: Sized>(t: T) {
+    // --snip--
+}
+```
+* If we don't know the size at compile time, we have the special syntax for only `Sized` trait
+```
+fn generic<T: ?Sized>(t: &T) {
+    // --snip--
+}
+```
+If size is not known with `?` syntax, use `&T` instead of `T`

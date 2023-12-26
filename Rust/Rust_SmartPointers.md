@@ -41,6 +41,7 @@ fn main() {
     let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
 }
 ```
+* Rist has to know which size of memory a return type needs. We can't have a function which returns a trait like `Animal`. Instead we can return a `Box` to tell that we have a pointer on the stack the points to an object on the heap that size is dynamically calculed from type `Box<dyn Animal>`
 
 ## Deref trait
 * Implementing `Deref` trait allows to customize behavior of the dereferencing operator `*`

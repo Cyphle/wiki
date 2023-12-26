@@ -124,3 +124,11 @@ fn last_char_of_first_line(text: &str) -> Option<char> {
     text.lines().next()?.chars().last()
 }
 ```
+
+## derive attribute
+* `derive` attribute which is annotated is a macro that generate default implementation of traits
+    * `Debug`
+    * `PartialEq`
+    * `Eq`
+    * etc
+* https://doc.rust-lang.org/book/appendix-03-derivable-traits.html#partialord-and-ord-for-ordering-comparisons

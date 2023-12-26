@@ -197,6 +197,88 @@ impl<T: Display> ToString for T {
 }
 ```
 
+### Advanced trait
+* Associated types connect a type placeholder with a trait such that the trait method definitions can use these placeholder types in their signatures. The implementor of a trait will specify the concrete type to be used instead of the placeholder type for the particular implementation. That way, we can define a trait that uses some types without needing to know exactly what those types are until the trait is implemented.
+```
+pub trait Iterator {
+    type Item;
+
+    fn next(&mut self) -> Option<Self::Item>;
+}
+
+impl Iterator for Counter {
+    type Item = u32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        // --snip--
+```
+* Difference between generic `<T>` and associated type is that with generic we can have multiple implementation but with associated type only one
+```
+pub trait Iterator<T> { // can have multiple implementations like impl Iterator<String> for Counter
+    fn next(&mut self) -> Option<T>;
+}
+```
+* Trait can have default concrete type `<PlaceholderType=ConcreteType>`
+```
+trait Add<Rhs=Self> {
+    type Output;
+
+    fn add(self, rhs: Rhs) -> Self::Output;
+}
+```
+* If we implement multiple methods with same name, as for example implementing multiple traits with same method name and an own method of a struct, we can specify by fully qualifying where the method comes from. If not, the default is the own method before the traits
+```
+fn main() {
+    let person = Human;
+    Pilot::fly(&person);
+    Wizard::fly(&person);
+    person.fly();
+}
+```
+* When functions are not method, they do not specify `&self` as parameter, we have to fully qualify if there are multiple implementations `<Type as Trait>::function(receiver_if_method, next_arg, ...);`
+```
+trait Animal {
+    fn baby_name() -> String;
+}
+
+struct Dog;
+
+impl Dog {
+    fn baby_name() -> String {
+        String::from("Spot")
+    }
+}
+
+impl Animal for Dog {
+    fn baby_name() -> String {
+        String::from("puppy")
+    }
+}
+
+fn main() {
+    println!("A baby dog is called a {}", Dog::baby_name());
+    println!("A baby dog is called a {}", <Dog as Animal>::baby_name());
+}
+```
+* We can specify supertraits like `OutlinePrint: Display` to tell that to implement `OutlinePrint` we need to implement `Display`
+* The rule that says we can implement a trait only if type or trait is local to the crate can be get around with `newtype pattern`. We have to create a new type that wraps the type which will implement the trait
+```
+use std::fmt;
+
+struct Wrapper(Vec<String>);
+
+impl fmt::Display for Wrapper {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "[{}]", self.0.join(", "))
+    }
+}
+
+fn main() {
+    let w = Wrapper(vec![String::from("hello"), String::from("world")]);
+    println!("w = {}", w);
+}
+```
+
 ## Lifetime
 * Lifetimes ensure that references are valid as long as we need them to be
 * Every reference has a lifetime. Most of the time lifetimes are implicit and inferred like types.

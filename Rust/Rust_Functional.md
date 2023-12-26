@@ -69,3 +69,59 @@ pub trait Iterator {
 
     assert_eq!(v2, vec![2, 3, 4]);
 ```
+
+## Advanced functions and closures
+* It is possible to pass closures to function but also functions
+* Function are coerce to `fn` (not the same as trait `Fn`) which is a function pointer
+```
+fn add_one(x: i32) -> i32 {
+    x + 1
+}
+
+fn do_twice(f: fn(i32) -> i32, arg: i32) -> i32 {
+    f(arg) + f(arg)
+}
+
+fn main() {
+    let answer = do_twice(add_one, 5);
+
+    println!("The answer is: {}", answer);
+}
+```
+* `fn` is a type and not a trait
+* Function pointers implement `Fn`, `FnMut` and `FnOnce` so it is possible to pass a function pointer instead of a closure
+* It is best practice to accept `fn` and closure. One use case to only accept `fn` and not closure is when calling external functions from languages that do not have closure
+* Example of using closure or function pointer for the same thing
+```
+    // Closure
+    let list_of_numbers = vec![1, 2, 3];
+    let list_of_strings: Vec<String> =
+        list_of_numbers.iter().map(|i| i.to_string()).collect();
+
+    // Function pointer
+    let list_of_numbers = vec![1, 2, 3];
+    let list_of_strings: Vec<String> =
+        list_of_numbers.iter().map(ToString::to_string).collect();
+```
+* Enum name are also initializers so we can use name as function pointers
+```
+    enum Status {
+        Value(u32),
+        Stop,
+    }
+
+    let list_of_statuses: Vec<Status> = (0u32..20).map(Status::Value).collect();
+```
+* It is not possible to return a closure because they do not have concrete type of trait. Rust does not know the size of the returned closure
+```
+// This won't compile
+fn returns_closure() -> dyn Fn(i32) -> i32 {
+    |x| x + 1
+}
+```
+* But we can box the closure to be returned
+```
+fn returns_closure() -> Box<dyn Fn(i32) -> i32> {
+    Box::new(|x| x + 1)
+}
+```

@@ -174,6 +174,7 @@ End User
 * [Concurrency & Parallelism](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Concurrency.md)
 * [Pattern Matching](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_PatternMatching.md)
 * [Unsafe Rust](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Unsafe.md)
+* [Macros](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Macros.md)
 
 # Cheat sheets
 
