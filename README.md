@@ -172,6 +172,8 @@ End User
 * [Cargo package manager](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Cargo.md)
 * [Smart Pointers](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_SmartPointers.md)
 * [Concurrency & Parallelism](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Concurrency.md)
+* [Pattern Matching](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_PatternMatching.md)
+* [Unsafe Rust](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Unsafe.md)
 
 # Cheat sheets
 

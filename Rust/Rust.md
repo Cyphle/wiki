@@ -3,6 +3,7 @@
 ## Links
 * [Doc](https://www.rust-lang.org)
 * [Other doc](https://doc.rust-lang.org/nomicon/index.html)
+* [Reference](https://doc.rust-lang.org/reference/items/unions.html)
 * [Book](https://doc.rust-lang.org/book/ch01-02-hello-world.html)
 * [Crates repository](https://crates.io)
 
