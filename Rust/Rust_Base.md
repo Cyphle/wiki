@@ -173,6 +173,7 @@ impl Rectangle {
 
 Rectangle::square(32);
 ```
+* Sometimes we want to return somethings but empty. We can return unit type `()` like `JoinHandle<()>`
 
 ## Enums
 * Enum can have receive data
