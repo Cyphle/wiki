@@ -178,6 +178,8 @@ End User
 
 # [Front](https://github.com/Cyphle/wiki/blob/main/Front/Frond.md)
 
+# [Web Assembly](https://github.com/Cyphle/wiki/blob/main/WebAssembly/WebAssembly.md)
+
 # Cheat sheets
 
 * [Linux](https://github.com/Cyphle/wiki/blob/main/CheatSheets/CheatSheet_Linux.md)
