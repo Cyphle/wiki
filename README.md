@@ -176,6 +176,8 @@ End User
 * [Unsafe Rust](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Unsafe.md)
 * [Macros](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Macros.md)
 
+# [Go](https://github.com/Cyphle/wiki/blob/main/Go/Go.md)
+
 # [Front](https://github.com/Cyphle/wiki/blob/main/Front/Frond.md)
 
 # [Web Assembly](https://github.com/Cyphle/wiki/blob/main/WebAssembly/WebAssembly.md)
