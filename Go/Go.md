@@ -80,6 +80,37 @@ const (
 )
 ```
 
-## Modules & depedencies
+## Modules, packages, depedencies & visibility
 * Modules have packages
 * To create a module `go mod init <name>`
+* Go module are new way of workspaces. A module is a 'project'
+```
+Module
+  |
+  --> Packages
+```
+* A module configures a workspace. It has a name, defines dependencies like `require golang.org/x/exp v...`
+* `go get` is a tool to get a third party package to use in our code
+* `go mod tidy` resolves automatically used dependencies and clean dependencies
+* In Go, everything that is lower case is not exported
+```
+package mypackage
+
+var isNotExported = 42 // not exported. private
+```
+* Something capitalized is exported and visible outside (from importers)
+```
+package mypackage
+
+func Fascinating() { // exported. visible outside. public
+
+}
+```
+* Use `import` to import packages from modules
+
+## Commands
+* `go build <file>` build the file
+* `go build .` build the module
+* `GOOS=windows go build` build for windows (can be linux, darwin [mac])
+* `go install` install program in path
+* `go help` to get help on commands or `go help <topic>`
