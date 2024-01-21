@@ -177,6 +177,7 @@ End User
 * [Macros](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Macros.md)
 
 # [Go](https://github.com/Cyphle/wiki/blob/main/Go/Go.md)
+* [Control Flow](https://github.com/Cyphle/wiki/blob/main/Go/Go_ControlFlow.md)
 
 # [Front](https://github.com/Cyphle/wiki/blob/main/Front/Frond.md)
 

@@ -114,3 +114,15 @@ func Fascinating() { // exported. visible outside. public
 * `GOOS=windows go build` build for windows (can be linux, darwin [mac])
 * `go install` install program in path
 * `go help` to get help on commands or `go help <topic>`
+
+## Init function
+* An init function is run at the beginning of a program to setup state
+```
+func init() {
+    // initialize
+}
+
+func main() {
+
+}
+```
