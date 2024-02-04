@@ -178,6 +178,7 @@ End User
 
 # [Go](https://github.com/Cyphle/wiki/blob/main/Go/Go.md)
 * [Control Flow](https://github.com/Cyphle/wiki/blob/main/Go/Go_ControlFlow.md)
+* [Structures](https://github.com/Cyphle/wiki/blob/main/Go/Go_Structures.md)
 
 # [Front](https://github.com/Cyphle/wiki/blob/main/Front/Frond.md)
 

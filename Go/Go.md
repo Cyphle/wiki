@@ -3,6 +3,77 @@
 ## Notes
 * Statically typed
 * Go is mutable
+* Go use references
+```
+a := []int{0, 1, 2, 3} // a = 0, 1, 2, 3
+b := a // b = 0, 1, 2, 3
+
+a[0] = 7
+
+// a = 7, 1, 2, 3
+// b = 7, 1, 2, 3
+```
+* Go pass by value for primitive and structures. And reference for slices and maps
+```
+func mySort(x []int) {
+	sort.Ints(x)
+}
+
+func main() {
+	o := []int{5, 2, 3, 4}
+	mySort(o)
+
+	fmt.Println(o) // 2, 3, 4, 5 => o is sorted
+}
+
+// Pass structure by value
+test := MyStruct{
+	value: 1,
+}
+hello(test)
+fmt.Println(test.value) // Will be 1
+
+type MyStruct struct {
+	value int
+}
+
+func hello(v MyStruct) {
+	v.value = 10
+}
+
+// Pass structure by reference
+test := MyStruct{
+	value: 1,
+}
+hello(&test)
+fmt.Println(test.value) // Will be 10
+
+func hello(v *MyStruct) {
+	v.value = 10
+}
+```
+* We can pass parameters as references
+```
+a := 1
+test(&a)
+fmt.Println(a)
+
+func test(x *int) {
+	*x++
+}
+```
+* `defer` defers the execution of the statement until the surrounding function returns
+```
+func main() {
+	defer fmt.Println("world")
+
+	fmt.Println("hello")
+}
+
+// Prints
+"hello"
+"world"
+```
 
 ## Variables
 * Declare and initialize
