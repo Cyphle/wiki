@@ -74,6 +74,7 @@ func main() {
 "hello"
 "world"
 ```
+* `...` is the spread operator to make slice into multiple variables `<slice>...` (comes after variable)
 
 ## Variables
 * Declare and initialize
