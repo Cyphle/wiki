@@ -13,7 +13,7 @@ a[0] = 7
 // a = 7, 1, 2, 3
 // b = 7, 1, 2, 3
 ```
-* Go pass by value for primitive and structures. And reference for slices and maps
+* Go pass by value (meaning it copies things) for primitive and structures. And reference for slices and maps
 ```
 func mySort(x []int) {
 	sort.Ints(x)

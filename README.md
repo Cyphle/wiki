@@ -180,6 +180,7 @@ End User
 * [Control Flow](https://github.com/Cyphle/wiki/blob/main/Go/Go_ControlFlow.md)
 * [Structures](https://github.com/Cyphle/wiki/blob/main/Go/Go_Structures.md)
 * [Functions](https://github.com/Cyphle/wiki/blob/main/Go/Go_Functions.md)
+* [Pointers](https://github.com/Cyphle/wiki/blob/main/Go/Go_Pointers.md)
 
 # [Front](https://github.com/Cyphle/wiki/blob/main/Front/Frond.md)
 
