@@ -102,3 +102,50 @@ y := &x // A pointer to x as y stores address of x
 
 fmt.Println(*y) // Dereferencing y to print value of x
 ```
+
+## Stack & Heap
+* Value semantic is when passing by value
+* Pointer semantic is when passing by reference/pointer
+* Value semantic put variables on the stack
+* Pointers point to variable on the heap
+* Using pointers is more when sharing and mutation rather than memory optimization
+
+## Method sets
+* The method set of a type T consists of all methods with receiver type T
+* The method set of a type *T consists of all methods with receiver *T or T
+* Method set is integral to how interfaces are implemented
+```
+type dog struct {
+    first string
+}
+
+func (d dog) walk() {
+    fmt.Println("Walk walk")
+}
+
+func (d *dog) run() {
+    d.first = "Rover"
+    fmt.Println("Run run")
+}
+
+type youngin interface {
+    walk()
+    run()
+}
+
+func youngRun(y youngin) {
+    y.run()
+}
+
+func main() {
+    d1 := dog("Henry")
+    d1.walk()
+    d1.run()
+    // youngRun(d1) => does not work because d1 is a value and is not a receiver for run and so not recognized as implementing youngin
+
+    d2 := &dog("Padget")
+    d2.walk()
+    d2.run()
+    youngRun(d2)
+}
+```

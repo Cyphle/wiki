@@ -73,7 +73,7 @@ type secretAgent struct {
     ltk bool
 }
 
-func (p person) speak() {
+func (p person) speak() { // (p person) is a receiver
     fmt.Println("Hello")
 }
 

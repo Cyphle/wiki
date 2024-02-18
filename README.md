@@ -181,6 +181,8 @@ End User
 * [Structures](https://github.com/Cyphle/wiki/blob/main/Go/Go_Structures.md)
 * [Functions](https://github.com/Cyphle/wiki/blob/main/Go/Go_Functions.md)
 * [Pointers](https://github.com/Cyphle/wiki/blob/main/Go/Go_Pointers.md)
+* [Generics](https://github.com/Cyphle/wiki/blob/main/Go/Go_Generics.md)
+* [Concurrency](https://github.com/Cyphle/wiki/blob/main/Go/Go_Concurrency.md)
 
 # [Front](https://github.com/Cyphle/wiki/blob/main/Front/Frond.md)
 
