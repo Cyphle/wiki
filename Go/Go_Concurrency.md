@@ -268,3 +268,148 @@ func receive(e, o, q <-chan int) {
     }
 }
 ```
+
+## Fan in
+* Get value from multiple channels and merge into one
+```
+func receive(even, odd <-chan int, fanint chan<- int) {
+    var wg.sync.WaitGroup
+    wg.Add(2)
+
+    go func() {
+        for v := range even {
+            fanin <- v
+        }
+        wg.Done()
+    }()
+
+    go func() {
+        for v := range odd {
+            fanin <- v
+        }
+    }()
+
+    wg.Wait()
+    close(fanin)
+}
+```
+```
+func main() {
+    c := fanIn(boring("Joe"), boring("Ann"))
+    for i := 0; i < 10; i++ {
+        fmt.Println(<-c)
+    }
+    fmt.Println("You're both boring; I'm leaving")
+}
+
+func boring(msg string) <-chan string {
+    c := make(chan string)
+    go func() {
+        for i := 0; ; i++ {
+            c <- fmt.Sprintf("%s %d", msg, i)
+            time.Sleep(time.Duratin(rand.Intn(1e3)) * time.Millisecond)
+        }
+    }()
+    return c
+}
+
+func fanIn(input1, input2 <-chan string) <-chan string {
+    c := make(chan string)
+    go func() {
+        for {
+            c <- <-input1
+        }
+    }()
+    go func() {
+        for {
+            c <- <-input2
+        }
+    }()
+    return c
+}
+```
+
+## Fan out
+* Send value to multiple channels
+```
+func fanOutIn(c1, c2 chan int) {
+    var wg sync.WaitGroup
+    for v := range c1 {
+        wg.Add(1)
+        go func(v2 int) { // Create multiple channels => fan out
+            c2 <- timeConsumingWork(v2)
+            wg.Done()
+        }(v)
+    }
+    wg.Wait()
+    close(c2)
+}
+
+func timeConsumingWork(n int) int {
+    time.Sleep(time.Microsecond * time.Duration(rand.Intn(500)))
+    return n + rand.Intn(1000)
+}
+```
+
+## Context
+* Use context to avoid leaking coroutines. For example if we launch a process that launches multiple coroutines, when the process is stopped, we have to stop coroutines
+* Go check official documentation
+```
+func main() {
+    ctx := context.Background()
+
+    fmt.Println("context:\t", ctx)
+    fmt.Println("context err:\t", ctx.Err())
+    fmt.Println("context type:\t%T\n", ctx)
+    fmt.Println("----")
+
+    ctx, cancel = context.WitchCancel(ctx)
+
+    fmt.Println("context:\t", ctx)
+    fmt.Println("context err:\t", ctx.Err())
+    fmt.Println("context type:\t%T\n", ctx)
+    fmt.Println("----")
+
+    cancel()
+
+    fmt.Println("context:\t", ctx)
+    fmt.Println("context err:\t", ctx.Err())
+    fmt.Println("context type:\t%T\n", ctx)
+    fmt.Println("----")
+}
+```
+* How to use
+```
+func main() {
+    ctx, cancel := context.WithCancel(context.Background())
+
+    fmt.Println("error check 1:", ctx.Err())
+    fmt.Println("num gortins 1:", runtime.NumGoroutine())
+
+    go func() {
+        n := 0
+        for {
+            select {
+                case <-ctx.Done():
+                    return // Return to not leak coroutine
+                default:
+                    n++
+                    time.Sleep(time.Millisecond * 200)
+                    fmt.Println("working", n)
+            }
+        }
+    }()
+
+    time.Sleep(time.Second * 2)
+    fmt.Println("error check 2:", ctx.Err())
+    fmt.Println("num gortins 2:", runtime.NumGoroutine())
+
+    fmt.Println("about to cancel context")
+    cancel()
+    fmt.Println("cancelled context")
+
+    time.Sleep(time.Second * 2)
+    fmt.Println("error check 3:", ctx.Err())
+    fmt.Println("num gortins 3:", runtime.NumGoroutine())
+}
+```

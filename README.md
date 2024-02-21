@@ -183,6 +183,8 @@ End User
 * [Pointers](https://github.com/Cyphle/wiki/blob/main/Go/Go_Pointers.md)
 * [Generics](https://github.com/Cyphle/wiki/blob/main/Go/Go_Generics.md)
 * [Concurrency](https://github.com/Cyphle/wiki/blob/main/Go/Go_Concurrency.md)
+* [Error Handling](https://github.com/Cyphle/wiki/blob/main/Go/Go_ErrorHandling.md)
+* [Testing](https://github.com/Cyphle/wiki/blob/main/Go/Go_Testing.md)
 
 # [Front](https://github.com/Cyphle/wiki/blob/main/Front/Frond.md)
 
