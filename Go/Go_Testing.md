@@ -77,3 +77,41 @@ func ExampleSum() {
 ## Golint
 * Go lint to lint
 * `go vet ./..` to lint all code 
+
+## Benchmarking
+* Allow to measure the speed of a program
+```
+func Greet(s string) string {
+    return fmt.Sprintf("Welcome my dear ", s)
+}
+
+func main() {
+    fmt.Println(saying.Great("James"))
+}
+
+// main_test.go
+func TestGreet(t *testing.T) {
+    s := Greet("James")
+    if s != "Welcome my dear James" {
+        t.Error("got", s, "expected", "Welcome my dear James")
+    }
+}
+
+func ExampleGreet() {
+    fmt.Println(Greet("James"))
+    // Output:
+    // Welcome my dead James
+}
+
+func BenchmarkGreet(b *testing.B) {
+    for i := 0; i < b.N; i++ {
+        Greet("James")
+    }
+}
+```
+* Run `go test -bench .` to run benchmark
+* Or run `go test -bench <name>` like Greet in the example above
+
+## Coverage
+* Run `go run test -coverprofile c.out`
+* To show result in browser `go tool cover -html=c.out`
