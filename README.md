@@ -188,6 +188,8 @@ End User
 
 # [Front](https://github.com/Cyphle/wiki/blob/main/Front/Frond.md)
 
+# [Fastify](https://github.com/Cyphle/wiki/blob/main/Fastify/Fastify.md)
+
 # [Web Assembly](https://github.com/Cyphle/wiki/blob/main/WebAssembly/WebAssembly.md)
 
 # Cheat sheets
