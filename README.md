@@ -175,6 +175,7 @@ End User
 * [Pattern Matching](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_PatternMatching.md)
 * [Unsafe Rust](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Unsafe.md)
 * [Macros](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Macros.md)
+* [Error Handling](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_ErrorHandling.md)
 
 # [Go](https://github.com/Cyphle/wiki/blob/main/Go/Go.md)
 * [Control Flow](https://github.com/Cyphle/wiki/blob/main/Go/Go_ControlFlow.md)
