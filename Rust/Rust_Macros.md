@@ -17,6 +17,23 @@ println!("hello {}", name);
 * You have to bring into scope macros before using it contrary of function
 * Calls with `!`. Example: `println!`. If call function `println`
 
+## Println
+* Positional argument
+```
+println!(
+    "I am doint {2} from {1} years and i {0} it",
+    "like", 20, "programming
+);
+```
+* Named argument
+```
+println!(
+    "{language} is a system programming language which is cool to {activity} in.",
+    activity = "code",
+    language = "Rust"
+);
+```
+
 ## Declarative macros
 * To define a macro, use `macro_rules!`
 * Example is `vec!` which is a macro `let v: Vec<u32> = vec![1, 2, 3];`

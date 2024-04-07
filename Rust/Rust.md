@@ -3,8 +3,7 @@
 ## Sections
 * [Cargo package manager](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Cargo.md)
 * [Variables, structures, etc](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_VariablesStruct.md)
-* [Control Flow](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_ControlFlow.md)
-* [Pattern Matching](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_PatternMatching.md)
+* [Control Flow & Pattern matching](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_ControlFlow.md)
 * [Organization - Packages, crates and co](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Organization.md)
 * [Ownership](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Memory.md)
 * [Rust Functional](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Functional.md)

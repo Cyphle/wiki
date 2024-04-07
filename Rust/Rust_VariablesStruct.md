@@ -3,18 +3,40 @@
 ## Variables, constants and structs
 * Variables are declared with `let`. There is type inference
 * Constants are declared with `const`
-* Compound types
-    * Tuples can hold variables of multiple types. They have a fix size, once declare, cannot change size. `let tup: (i32, f64, u8) = (500, 6.4, 1);`. Can spread `let (x, y, z) = tup`
-    * Arrays can hold variables of same type. They have a fix length. Can be initialize directly or specified with type and length. `let months = ["Janvier", "Février"]; let a: [i32, 5] = [1, 2, 3, 4, 5];`
 * Type conversion
 ```
 let a: i32 = 10
 let b: f64 = a as f64
 ```
-* Arrays `let mut array_1 = [4, 5, 6, 8]`. `[0; 10]` creates an array of 10 elements that are all equal to 0. Size is immutable.
-* Vectors `let vec: Vec<i32> = vec![4, 5, 6, 8, 9]`. It can change size.
-* Tuples can hold different types of values. `let my_info = ("Salary", 4000);`. Access element with `my_info.1`. 
 * `let unit = ();` is the unit type
+
+## Compound types
+* Tuples can hold variables of multiple types. They have a fix size, once declare, cannot change size. `let tup: (i32, f64, u8) = (500, 6.4, 1);`. Can spread `let (x, y, z) = tup`
+* Arrays can hold variables of same type. They have a fix length. Can be initialize directly or specified with type and length. `let months = ["Janvier", "Février"]; let a: [i32, 5] = [1, 2, 3, 4, 5];`
+
+## Arrays
+* Arrays `let mut array_1 = [4, 5, 6, 8]`. `[0; 10]` creates an array of 10 elements that are all equal to 0. Size is immutable.
+* Arrays can hold variables of same type. They have a fix length. Can be initialize directly or specified with type and length. `let months = ["Janvier", "Février"]; let a: [i32, 5] = [1, 2, 3, 4, 5];`
+
+## Vectors
+* Vectors `let vec: Vec<i32> = vec![4, 5, 6, 8, 9]`. It can change size.
+
+## Tuples
+* Tuples can hold different types of values. `let my_info = ("Salary", 4000);`. Access element with `my_info.1`. 
+* Tuples can hold variables of multiple types. They have a fix size, once declare, cannot change size. `let tup: (i32, f64, u8) = (500, 6.4, 1);`. Can spread `let (x, y, z) = tup`
+
+## Static
+* Static variable `static WELCOME: &str = "Welcome to Rust";`. Constantes are inlined and statics uses a given memory location.
+```
+static WELCOME: &str = "Welcome to Rust";
+
+let a = WELCOME; // Same memory location as b
+let b = WELCOME; // Same memory location as a
+
+const PI = 3.14;
+let x = PI; // Not same memory location as y
+let y = PI; // Not same memory location as x
+```
 
 ### String
 * String slice with `&str` and `String`
