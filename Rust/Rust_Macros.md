@@ -15,6 +15,7 @@ println!("hello {}", name);
 * Also, macros are expanded before the compiler interprets the meaning of the code, so a macro can, for example, implement a trait on a given type. A function can’t, because it gets called at runtime and a trait needs to be implemented at compile time.
 * Writing macro is more difficult as a macro is writtent in Rust to write Rust
 * You have to bring into scope macros before using it contrary of function
+* Calls with `!`. Example: `println!`. If call function `println`
 
 ## Declarative macros
 * To define a macro, use `macro_rules!`

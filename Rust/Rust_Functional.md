@@ -1,5 +1,29 @@
 # Rust functional
 
+## Functions
+* Convetion for functions is snake case
+* Return statement does not have semicolon
+```
+fn multiplication(num1: i32, num2: i32) -> {
+    println!("Computing multiplication");
+    num1 * num2
+}
+```
+* To return multiple values, use tuples which can be destructured
+```
+fn basic_math(num1: i32, num2: i32) -> (i32, i32, i32) {
+    ...
+}
+```
+* `format!` macro is used to format strings
+```
+let full_name = {
+    let first_name = "John";
+    let last_name = "Doe";
+    format!({first_name} {last_name})
+};
+```
+
 ## Closures
 * Rust allows to pass closures as arguments of functions
 * An example of using closure is `unwrap_or_else` which accepts a closure as argument. The closure is evaluated latter if needed.

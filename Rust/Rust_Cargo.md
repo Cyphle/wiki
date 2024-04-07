@@ -8,6 +8,10 @@
 * `cargo update` updates dependencies
 * `cargo doc --open` generates a doc of dependencies of current project
 * `cargo test` to run tests
+* `cargo new` to generate a new project with Cargo
+
+## Files
+* `.toml` file contains dependencies and base information like program version
 
 ## Profiles
 * Cargo has two main profiles `dev` with `cargo build` and `release` with `cargo build --release`
