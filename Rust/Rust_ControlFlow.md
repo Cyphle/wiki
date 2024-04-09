@@ -1,10 +1,10 @@
 # Rust control flow
 
 ## If let else
-* `if let` control flow is usefull for matching only on value of an enum
+* `if let` control flow is usefull for matching only on value of an enum and can receive a variable
 ```
     let config_max = Some(3u8);
-    if let Some(max) = config_max {
+    if let Some(max) = config_max { // Receive max as variable to be used
         println!("The maximum is configured to be {}", max);
     }
 ```
@@ -145,7 +145,7 @@ match x {
     let x = Some(5);
     let y = 10;
 
-    match x {
+    match x { // A match pattern can receive value or variable
         Some(50) => println!("Got 50"),
         Some(y) => println!("Matched, y = {y}"),
         _ => println!("Default case, x = {:?}", x),
@@ -205,6 +205,13 @@ match marks {
 ```
 * Have to match all possible cases.
 * The particular pattern _ will match anything
+* A pattern matching can receive variable
+```
+match student_grade {
+    Some(grade) => println("Grade is: {grade}"),
+    None => println("No grade")
+}
+```
 
 ### Match guard
 * A match guard is an additional if condition, specified after the pattern in a match arm, that must also match for that arm to be chosen like `if x % 2 == 0`. Variable created in match guard can be used in arm

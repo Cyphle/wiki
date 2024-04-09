@@ -1,20 +1,25 @@
 # Memory management
 
 ## Ownership
-* Memory is managed through a system of ownership with a set of rules that the compiler checks
-* It is important to understand stack and heap with Rust
-    * Stack is First In Last Out (FILO). Add data on stack must have known fixed size
-    * Data with unknown size must be in heap. When allocating on the heap, it returns a pointer which can be stored in stack
-    * Allocating on heap is more expensive than pushing on the stack
-    * Calling a function puts things on the stack including local variables
-* Ownership rules
-    * Each value in Rust has an owner.
-    * There can only be one owner at a time.
-    * When the owner goes out of scope, the value will be dropped.
+Memory is managed through a system of ownership with a set of rules that the compiler checks
+
+### Ownership rules
+* Each value in Rust has an owner.
+* There can only be one owner at a time.
+* When the owner goes out of scope, the value will be dropped.
+
+### Stack & heap
+It is important to understand stack and heap with Rust
+* Stack is First In Last Out (FILO). Add data on stack must have known fixed size
+* Data with unknown size must be in heap. When allocating on the heap, it returns a pointer which can be stored in stack
+* Allocating on heap is more expensive than pushing on the stack
+* Calling a function puts things on the stack including local variables
+
+### Moving values
 * Moved values is when an object (not primitive) is referenced by another variable. Then the pointer is hold by the second variable and the first one cannot be used. It is to avoid freeing memory twice (for each variable). It is a shallow copy, or a move
 ```
 let s1 = String::from("hello");
-let s2 = s1;
+let s2 = s1; // Value of s1 has been moved to s2.
 
 println!("{}, world!", s1); <= throws an error
 ```
@@ -33,13 +38,11 @@ fn main() {
                                     // but i32 is Copy, so it's okay to still
                                     // use x afterward
 
-} // Here, x goes out of scope, then s. But because s's value was moved, nothing
-  // special happens.
+} // Here, x goes out of scope, then s. But because s's value was moved, nothing special happens.
 
 fn takes_ownership(some_string: String) { // some_string comes into scope
     println!("{}", some_string);
-} // Here, some_string goes out of scope and `drop` is called. The backing
-  // memory is freed.
+} // Here, some_string goes out of scope and `drop` is called. The backing memory is freed.
 
 fn makes_copy(some_integer: i32) { // some_integer comes into scope
     println!("{}", some_integer);
@@ -91,7 +94,33 @@ fn calculate_length(s: &String) -> usize {
     s.len()
 }
 ```
-* References are immutable so we cannot change the value of a reference
+* Primitives are not moved because there is no pointer, they are stored on the stack. But they are passed by value, meaning we cannot change value in a function
+```
+fn main() {
+    let my_thing = 42;
+    on_the_stack(my_thing);
+    println!("After on the stack but in main {my_thing}"); // Prints 42
+}
+
+fn on_the_stack(mut something: i32) {
+    something = 54;
+    println!("Something in on_the_stack {something}"); // Prints 54
+}
+```
+
+### References & borrowing
+* Borrowing is establishing a reference to some data. Just like pointers with some rules. Does not take ownership.
+* Rules:
+    * At any time, you can have either one mutable reference OR any number of immutable references
+    * References must always be valid
+* When using reference to pass variables, we don't need to return the value because the function only borrows the reference. We call the action of creating a reference borrowing. As in real life, if a person owns something, you can borrow it from them. When you’re done, you have to give it back. You don’t own it.
+```
+fn calculate_length(s: &String) -> usize { // s is a reference to a String
+    s.len()
+} // Here, s goes out of scope. But because it does not have ownership of what
+  // it refers to, it is not dropped.
+```
+* References, using `&`, are immutable so we cannot change the value of a reference
 ```
 fn main() {
     let s = String::from("hello");
@@ -138,8 +167,25 @@ fn change(some_string: &mut String) {
     let r3 = &mut s; // no problem
     println!("{}", r3);
 ```
+* To create a mutable reference, the variable must be mutable
 * Rust compiler ensures that there is no dangling reference
+* Mutable references when assigned are moved, while immutable references are copied
 
+### Dereferencing
+* It is the act to get the value of a reference
+```
+fn main() {
+    let mut some_data = 42;
+    let ref_1 = &mut some_data;
+    let deref_copy = *ref_1; // deref_copy gets the value of ref_1 which is 42
+    *ref_1 = 13;
+    println!("some_data is: {some_data}, deref_copy is: {deref_copy}"); // Prints 13 and 42
+
+    let mut heap_data = vec![5, 6, 7];
+    let ref_1 = &mut heap_data;
+    let deref_copy = *ref_1; // Does not work because vec is on the heap and dereferencing means changing ownership.
+}
+```
 
 ## Lifetime
 * Lifetimes ensure that references are valid as long as we need them to be

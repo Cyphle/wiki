@@ -24,6 +24,12 @@ let b: f64 = a as f64
 ## Tuples
 * Tuples can hold different types of values. `let my_info = ("Salary", 4000);`. Access element with `my_info.1`. 
 * Tuples can hold variables of multiple types. They have a fix size, once declare, cannot change size. `let tup: (i32, f64, u8) = (500, 6.4, 1);`. Can spread `let (x, y, z) = tup`
+* Can declare tuple structs `struct Point_2D(i32, i32)`
+```
+struct Point_2D(i32, i32);
+
+let point1 = Point_2D(1, 3);
+```
 
 ## Static
 * Static variable `static WELCOME: &str = "Welcome to Rust";`. Constantes are inlined and statics uses a given memory location.
@@ -51,6 +57,7 @@ fn my_function(s: $str) // Accept String literal and String type and String slic
 * String literal are on stack because size can be determined at compile time
 * String type are on heap because size cannot be determined at compile time
 * String literal `println!("{s}")`
+* String have length and capacity.
 
 ### Slices
 * Slices let you reference a contiguous sequence of elements in a collection rather than the whole collection. A slice is a kind of reference, so it does not have ownership.
@@ -83,7 +90,7 @@ let slice = &a[1..3];
 assert_eq!(slice, &[2, 3]);
 ```
 
-### Struct
+## Struct
 * Declare
 ```
 struct User {
@@ -155,8 +162,30 @@ fn main() {
     let subject = AlwaysEqual;
 }
 ```
+* Beware of ownership in structs!
+```
+struct Car {
+    owner: String,
+    year: u8,
+    fuel_level: f32,
+    price: u32
+}
 
-#### Methods
+fn main() {
+    let mut my_car {
+        owner: String::from("John doe"),
+        year: 2010,
+        fuel_level: 0.0,
+        price: 5_000
+    }
+
+    let extracted_owner = my_car.owner; // Field owner has been moved
+    println!("Owner {}", my_car.owner); // will not work because has been moved (partial move)
+}
+```
+* Unit struct has no field `struct ABC;`
+
+### Methods
 * Methods are functions that are declared inside a struct and receive `self` as first parameter (like in Python)
 ```
 #[derive(Debug)]
@@ -198,7 +227,7 @@ Rectangle::square(32);
 ```
 * Sometimes we want to return somethings but empty. We can return unit type `()` like `JoinHandle<()>`
 
-### Enums
+## Enums
 * Enum can have receive data
 ```
     enum IpAddr {
@@ -228,8 +257,33 @@ Rectangle::square(32);
         ChangeColor(i32, i32, i32),
     }
 ```
+* Enum can receive methods
+```
+enum TravelType {
+    Car(f32),
+    Train(f32),
+    Aeroplane(f32)
+}
 
-### Option
+impl TravelType {
+    fn travel_allowance(&self) -> f32 {
+        let allowance = match self {
+            TravelType::Car(miles) => miles * 2.0,
+            TravelType::Train(miles) => miles * 3.0,
+            TravelType::Aeroplane(miles) => miles * 5.0,
+        };
+        allowance
+    }
+}
+
+fn main() {
+    let participant = TravelType::Car(60.0);
+
+    println!("Allowance of participant is: {}", participant.travel_allowance());
+}
+```
+
+## Option
 * Option is the concept that something can be present or sent (same as either). Like if you access an element of a collection or an empty collection
 * Rust does not have the null concept but uses option
 ```
@@ -238,8 +292,80 @@ enum Option<T> {
     Some(T),
 }
 ```
+* Usage example
+```
+struct Student {
+    name: String,
+    grade: Option<u32>
+}
 
-### Type alias
+fn get_grade(student_name: &String, student_db: &Vec<Student>) -> Option<u32> {
+    for student in student_db {
+        if student.name == *student_name {
+            return student.grade;
+        }
+    }
+    None
+}
+
+fn main() {
+    let student_db = vec![
+        Student {
+            name: String::from("Alice"),
+            grade: Some(95)
+        },
+        Student {
+            name: String::from("Bob"),
+            grade: Some(87)
+        },
+        Student {
+            name: String::from("Charlie"),
+            grade: None
+        }
+    ];
+
+    let student_name = String::from("Bob");
+    let student_grade = get_grade(&student_name, &student_db);
+
+    match student_grade {
+        Some(grade) => println("Grade is: {grade}"),
+        None => println("No grade")
+    }
+}
+```
+
+## Result
+* Result structure of Rust allows to represent a result or an error
+```
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+```
+
+```
+fn check_student_get_grade(student_name: &String, student_db: &Vec<Student>) -> Result<Option<u32>, String> {
+    for student in student_db {
+        if student.name == *student_name {
+            return Ok(student.grade);
+        }
+    }
+    Err(String::from("Student not found"));
+}
+
+let student_status = check_student_get_grade(&student_name, &student_db);
+
+match student_status {
+    Ok(grade) => {
+        if let Some(grade) = option_grade {
+            println("Grade is: {grade}");
+        }
+    },
+    Err(error_msg) => println!("{error_msg}"),
+}
+```
+
+## Type alias
 * Rust allows for type alias
 ```
     type Kilometers = i32;
@@ -252,7 +378,7 @@ enum Option<T> {
     type Thunk = Box<dyn Fn() + Send + 'static>;
 ```
 
-### Never type
+## Never type
 * The never type is to tell a function will never return
 ```
 fn bar() -> ! {
