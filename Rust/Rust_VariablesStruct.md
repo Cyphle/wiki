@@ -365,6 +365,57 @@ match student_status {
 }
 ```
 
+## Hashmap
+```
+fn main() {
+    let mut person: HashMap<&str, i32> = HashMap::new();
+    person.insert("Nouman", 40);
+
+    println("The age is {:?}", person.get("Nouman").unwrap());
+}
+```
+* To check is a key exist
+```
+if person.contains_key("Nouman") {
+
+} else {
+
+}
+```
+* Can use match pattern
+```
+match person.get("Nouman") {
+    Some(value) => println("{value}"),
+    None => println!("The value does not exist")
+}
+```
+* Loop entries
+```
+let (name, age) in &person {
+    // name = key, age = value
+}
+```
+* For `let mut` hashmap, values are mutable
+* Get an entry if exists or create one
+```
+let mut likes:HashMap<&str, &str> = HashMap::new()
+likes.entry("Nouman").or_insert("apple)";
+```
+* Example
+```
+fn main() {
+    let some_vec: Vec<i32> = vec![5, 5, 8, 8, 1, 0, 1, 5, 5, 5, 5];
+    let mut feq_vec:HashMap<i32, u32> = HashMap::new();
+
+    for i in &some_vec {
+        let freq: &mut u32 = freq_vec.entry(*i).or_insert(0);
+        *freq += 1;
+    }
+
+    println!("{:?}", freq_vec);
+}
+```
+
 ## Type alias
 * Rust allows for type alias
 ```
