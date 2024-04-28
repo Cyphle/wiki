@@ -1,14 +1,14 @@
 # Rust organizations - Packages, crates, etc
 
 ## Overview
-* Packages: A Cargo feature that lets you build, test, and share crates
-* Crates: A tree of modules that produces a library or executable
+* Packages: A Cargo feature that lets you build, test, and share crates. Contains crates. Highest level of code organization. Must contain at least 1 crate.
+* Crates: A tree of modules that produces a library or executable. A compilation unit. Can be a binary crate or a library crate. Contains modules.
 * Modules and use: Let you control the organization, scope, and privacy of paths
 * Paths: A way of naming an item, such as a struct, function, or module
 
 ## Crate
 * A crate is the samellest amount of code the Rust compiler considers at a time.
-* Binary crate: is a crate that can be compiled and executed. It must have a main function
+* Binary crate: is a crate that can be compiled and executed. It must have a main function. To run a main, by convention, the name of the executable is the name of the package (folder). Like `cargo run app` which runs `main` in `/app/main.rs`.
 * Library crate: they don't have main and define functionalities usable by other crate
 
 ## Organizing code
@@ -16,6 +16,111 @@
 * The crate root is the source that Rust starts from and is the root module
 * A package is a bundle of n crates and has a `Cargo.toml` file that describes how to build those crates
 * `use` keyword brings a path into scope
+
+## Modules
+* Are used to organize code and expose part of codes
+```
+mod order {
+    struct Order {
+        id: u64,
+        product: crate::product::Product,
+        customer: create::customer::Customer,
+        quantity: u32
+    }
+
+    impl Order {
+        ...
+    }
+}
+
+mod customer {
+    pub struct Customer {
+        id: u64,
+        name: String,
+        email: String
+    }
+}
+
+mod product {
+    pub struct Product {
+        id: u64,
+        name: String,
+        price: f64,
+        category: category::Category,
+    }
+
+    mod category {
+        pub enum Category {
+            Electronics,
+            Clothing,
+            Books
+        }
+    }
+}
+```
+* A child module can access parent but parent cannot access child.
+* If modules are separate, use absolute path to use modules like `crate::mymodule::...` and if modules are in the same module, use relative `mymodule::...`
+* If a module is not defined, a module takes the name of the file. And to declare it, use `mod mymodule`
+```
+// In customer.rs
+pub struct Customer {
+    id: u64,
+    name: String,
+    email: String
+}
+
+// In lib.rs => important that we talk about the file lib.rs
+mod customer;
+```
+* For submodule, it needs to be in subfolder
+```
+// In product/category.rs
+pub enum Category {
+    Electronics,
+    Clothing,
+    Books
+}
+
+// In product.rs
+mod category;
+```
+* To use library in main
+```
+use my_package::{customer::Customer, product::Product};
+```
+* It is possible to reexport modules
+```
+// In lib.rs
+pub use customer::Customer;
+pub use product::{Category, Product};
+
+// In main.rs
+use my_package::{Customer, Product, Category};
+```
+
+## Use declaration
+* To simplify use of modules, it is possible to use the `use` keyword. `use` keyword brings module into scope
+```
+mod product {
+    use category::Category;
+
+    pub struct Product {
+        id: u64,
+        name: String,
+        price: f64,
+        category: Category,
+    }
+
+    mod category {
+        pub enum Category {
+            Electronics,
+            Clothing,
+            Books
+        }
+    }
+}
+```
+* Public module in child can only be access by parent if parent is private
 
 ## Rules
 * Start from the crate root: When compiling a crate, the compiler first looks in the crate root file (usually src/lib.rs for a library crate or src/main.rs for a binary crate) for code to compile.
@@ -58,3 +163,6 @@ pub mod vegetables; // can use content of file src/garden/vegetables.rs because 
 // src/garden/vegetables.rs
 pub struct Asparagus {}
 ```
+
+## Tools
+* Tool `cargo-modules`, `cargo install cargo-modules` can be used to generate tree `cargo modules structure` or `cargo modules structure --lib`
