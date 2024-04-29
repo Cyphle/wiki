@@ -1,5 +1,6 @@
 # Rust automated tests
 
+## Example
 * Example of test
 ```
 #[cfg(test)]
@@ -90,3 +91,81 @@ adder
     └── integration_test.rs
 ```
 * Annotation `#[cfg(test)]` is used when tests are written in same file as code to tell the cargo that they are tests
+
+## Assert a function panic
+```
+mod shapes {
+    pub struct Circle {
+        radius: f32,
+    }
+
+    impl Circle {
+        pub fn new(radius: f32) -> Circle {
+
+        }
+    }
+}
+
+
+#[test]
+#[should_panic]
+fn should_create_and_panic() {
+    let some_circle = shapes::Circle::new(-11.0);
+}
+```
+
+## Controlling test execution
+* To run tests containing a string `cargo test <My_string>`
+* To run `#[ignore]` tests `cargo test --ignore`
+
+## Integration tests
+* Place them in a directory in source `tests`
+```
+/
+    tests
+```
+* Files are named `xxx_test.rs`
+* Example
+```
+// In tests/order_test.rs
+use mypackage::{Category, Customer, Order, Product};
+
+#[test]
+fn test_total() {
+    let product = Product::new(1, String::from("Book"), 19.9, Category::Books);
+    let customer = Customer::new(1, String::from("Bob"), String::from("bob@bob.fr"));
+    let order = Order::new(2, product, customer, 3);
+
+    assert_eq!(format!("{:2}", order.total_bill(), "65.67"));
+}
+```
+* To run only tests in `tests` directory `cargo test --test <mytestfile>`
+
+## Benchmark testing
+* Rust tools are in test
+* Use Criterion tool
+```
+// In Cargo.toml
+[dev-dependencies]
+criterion = "0.4.0"
+
+[[bench]]
+name = "sorting_benchmark"
+harness = false
+```
+* In a folder `benches` under the root folder, files `xxx_benchmark.rs`
+```
+use learning_rust::{sort_algo_1, sort_algo_2};
+use criterion::{criterion_group, criterion_main, Criterion};
+
+fn sort_benchmark(c: &mut Criterion) {
+    let mut numbers: Vec<i32> vec![1, 2, 3, 55, 4, 32];
+
+    c.brench_function("Sorting Algorithm", |b| {
+        b.iter(|| sort_algo_1(&mut numbers))
+    });
+}
+
+criterion_group!(benches, sort_benchmark);
+criterion_main!(benches);
+```
