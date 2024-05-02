@@ -303,7 +303,39 @@ fn returns_shape(dimension: Vec<f32>) -> Box<dyn Shape> {
 }
 ```
 
-### Advanced trait
+### Derived trait
+* Trait that are automatically implemented with for example macros like `#[derive(Debug)]`
+```
+#[derive(Debug)]
+struct Student {
+    name: String,
+    age: u8,
+    se: char,
+}
+
+fn main() {
+    let s_1 = Student {
+        name: String::from("ABC"),
+        age: 35,
+        sex: 'M',
+    };
+
+    println("Student: {:?}", s_1) // Possible with #[derive(Debug)]
+}
+```
+* Other examples `#[derive(PartialEq)]`
+
+### Marker trait
+* Marker trait is to add some indications and have nothing
+```
+trait Properties {}
+```
+* Or to group multiple traits
+```
+trait Properties: PartialEq + Default + Clone {}
+```
+
+### Associated type
 * Associated types connect a type placeholder with a trait such that the trait method definitions can use these placeholder types in their signatures. The implementor of a trait will specify the concrete type to be used instead of the placeholder type for the particular implementation. That way, we can define a trait that uses some types without needing to know exactly what those types are until the trait is implemented.
 ```
 pub trait Iterator {
@@ -318,6 +350,46 @@ impl Iterator for Counter {
     fn next(&mut self) -> Option<Self::Item> {
         // --snip--
 ```
+* Another example
+```
+trait DistanceThreeHours (
+    type Distance;
+
+    fn distance_in_three_hours(&self) -> Self::Distance;
+)
+
+#[derive(Debug)]
+struct Kmh {
+    value: u32,
+}
+
+#[derive(Debug)]
+struct Miles {
+    value: u32,
+}
+
+impl DistanceThreeHours for Kmh {
+    type Distance = Km;
+
+    fn distance_in_three_hours(&self) -> Self::Distance {
+        Self::Distance {
+            value: self.value * 3,
+        }
+    }
+}
+
+impl DistanceThreeHours for Mph {
+    type Distance = Miles;
+
+    fn distance_in_three_hours(&self) -> Self::Distance {
+        Self::Distance {
+            value: self.value * 3,
+        }
+    }
+}
+```
+
+### Advanced trait
 * Difference between generic `<T>` and associated type is that with generic we can have multiple implementation but with associated type only one
 ```
 pub trait Iterator<T> { // can have multiple implementations like impl Iterator<String> for Counter
@@ -382,6 +454,80 @@ impl fmt::Display for Wrapper {
 fn main() {
     let w = Wrapper(vec![String::from("hello"), String::from("world")]);
     println!("w = {}", w);
+}
+```
+
+## Generic vs Associated type
+* Associated type are linked to trait and trait are used to give behavior to struct
+* Generic are behavior that can be applied to multiple struct
+* They are not used for the same thing. A struct implementing a trait IS a trait and a generic behavior USES a struct. When there is a single implementation of a trait, use associated type. When there are multiple, use generic
+* Example that associated type does not work
+```
+trait Addition {
+    type Rhs;
+    type Output;
+
+    fn add(&self, rhs: Self::Rhs) -> Self::Output;
+}
+
+struct Point {
+    x: i32,
+    y: i32
+}
+
+impl Addition for Point {
+    type Rhs = Point;
+    type Output = Point;
+
+    fn add(&self, rhs: Self::Rhs) -> Self::Output {
+        Point {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
+    }
+}
+
+impl Addition for Point { // There is already an implementation for Addition with Point
+    type Rhs = i32;
+    type Output = Point;
+
+    fn add(&self, rhs: Self::Rhs) -> Self::Output {
+        Point {
+            x: self.x + rhs,
+            y: self.y + rhs,
+        }
+    }
+}
+```
+* Solution is to use generic
+```
+trait Addition<Rhs> {
+    type Output;
+
+    fn add(self, rhs: Rhs) -> Self::Output;
+}
+
+impl Addition<Point> for Point {
+    type Output = Point;
+
+    fn add(&self, rhs: Rhs) -> Self::Output {
+        Point {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
+    }
+}
+
+impl Addition<i32> for Point {
+    type Rhs = i32;
+    type Output = Point;
+
+    fn add(&self, rhs: Rhs) -> Self::Output {
+        Point {
+            x: self.x + rhs,
+            y: self.y + rhs,
+        }
+    }
 }
 ```
 
