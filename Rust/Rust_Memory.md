@@ -276,6 +276,139 @@ pub fn search<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
 }
 ```
 
+### Concrete lifetime
+* A concrete lifetime is the time during which a value exists inside the memory
+* The lifetime of a value starts when it is created and ends when the value is dropped or moved out for example when moved of ownership
+```
+let i;
+{
+    let j = 5;
+    i = &j; // Error: j does not live long enough. Lifetime of j is shorter than i
+}
+println!("i : {i}");
+```
+* Only one mutable reference or multiple immutable references
+```
+let mut vec_1 = vec![6, 5, 8, 9];
+let ref_1 = &vec_1;
+println!("ref 1: {:?}", ref_1);
+let ref_2 = &mut vec_1;
+ref_2.push(3);
+println!("ref 2: {:?}", ref_2);
+```
+In this example we have one mutable and on immutable references. It is because of non lexical lifetimes which relax strictness. In this case, the compiler knows that `ref_1` is not used after creation of mutable reference and does not coexists. So its lifetime has been ended automatically.
+
+### Generic lifetime specifier
+* When we return a reference, we may be in cases when we do not know the lifetime duration of a borrowed reference like in the following example. The `picked_value` contains one of the references and the borrow checker does not know which one.
+```
+fn main() {
+    let int1 = 5;
+    let int2 = 10;
+    let picked_value = picking_int(&int1, &int2);
+    println!("{picked_value}");
+}
+
+fn picking_int(i: &i32, j: &i32) -> &i32 {
+    if rand::random() {
+        i
+    } else {
+        j
+    }
+}
+```
+* To tell the borrow checker the lifetime
+```
+fn main() {
+    let int1 = 5;
+    let int2 = 10;
+    let picked_value = picking_int(&int1, &int2);
+    println!("{picked_value}");
+}
+
+fn picking_int<'a>(i: &'a i32, j: i'a 32) -> &'a i32 {
+    if rand::random() {
+        i
+    } else {
+        j
+    }
+}
+```
+The lifetime of the returning is equal of the shortest of the lifetimes. In this example, `int1` and `int2` have lifetime until the end of main with `int2` the shortest lifetime. Then lifetime of `picked_value` has a lifetime which will be valid until the end of main.
+* More clear example
+```
+fn main() {
+    let int1 = 5;
+    {
+        let int2 = 10;
+        let picked_value = picking_int(&int1, &int2);
+        println!("{picked_value}");
+    }
+}
+
+fn picking_int<'a>(i: &'a i32, j: i'a 32) -> &'a i32 {
+    if rand::random() {
+        i
+    } else {
+        j
+    }
+}
+```
+* In the following example, `int2` does not live long enough.
+```
+fn main() {
+    let int1 = 5;
+    let picked_value;
+    {
+        let int2 = 10;
+        picked_value = picking_int(&int1, &int2);
+    }
+    println!("{picked_value}");
+}
+
+fn picking_int<'a>(i: &'a i32, j: i'a 32) -> &'a i32 {
+    if rand::random() {
+        i
+    } else {
+        j
+    }
+}
+```
+Lifetime of `picked_value` is equal to shortest which is `int2` but `int2` does not live after inner scope.
+* In the following example, we do not specify lifetime for all parameters so we do not have the problem
+```
+fn main() {
+    let int1 = 5;
+    let picked_value;
+    {
+        let int2 = 10;
+        picked_value = picking_int(&int1, &int2);
+    }
+    println!("{picked_value}");
+}
+
+fn picking_int<'a>(i: &'a i32, j: i32) -> &'a i32 {
+    i
+}
+```
+It is because we do not borrow lifetime of `j`.
+* A returned reference must be one of the parameter. If not, when we create a variable in a function and try to return its reference, its reference will not be valid. If we really want to do this, we can use a static lifetime which is valid during the whole program
+```
+fn main() {
+    let int1 = 5;
+    let picked_value;
+    {
+        let int2 = 10;
+        picked_value = picking_int(&int1, &int2);
+    }
+    println!("{picked_value}");
+}
+
+fn picking_int(i: &i32, j: i32) -> &'static i32 {
+    let y: &'static i32 = &6;
+    y;
+}
+```
+
 ### Lifetime elision
 * Lifetime elision are some use cases integrated into the compiler that do not need lifetime. It is because the compiler knows how the references behave
 ```
@@ -300,3 +433,30 @@ fn first_word(s: &str) -> &str {
 
 ### Static lifetime
 * They are lifetime that can live for the entire duration of the program `let s: &'static str = "I have a static lifetime.";`
+
+### Lifetime and structs
+* Struct that use references may use some that are not valid during the lifetime of the struct.
+* To handle reference in structure, all attribute using references must be annotated with lifetime
+```
+struct ArrayProcessor<'a> {
+    data: &'a [i32],
+}
+
+impl<'a> ArrayProcessor<'a> {
+    fn update_data(&mut self, new_data: &'a [i32]) -> &[i32] {
+        let previous_data = self.data;
+        self.data = new_data;
+        previous_data
+    }
+}
+
+fn main() {
+    let mut some_data = ArraProcessor {
+        data: &[4, 5, 6]
+    }
+
+    let previous_data = some.data.update_data(&[5, 8, 10]);
+    println!("Previous data: {:?}", previous_data);
+    println!("New data: {:?}", some_data.data);
+}
+```
