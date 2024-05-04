@@ -6,7 +6,7 @@
     * `Deref` to allow to behave like references
     * `Drop` that allow to customize behavior when pointer goes out of scope
 
-## Box<T>
+## Box<T>: Box smart pointer
 * `Box<T>` is a pointer that stores data on the heap
 * Use cases
     * When you have a type whose size can’t be known at compile time and you want to use a value of that type in a context that requires an exact size
@@ -42,6 +42,29 @@ fn main() {
 }
 ```
 * Rist has to know which size of memory a return type needs. We can't have a function which returns a trait like `Animal`. Instead we can return a `Box` to tell that we have a pointer on the stack the points to an object on the heap that size is dynamically calculed from type `Box<dyn Animal>`
+* Some examples of using box
+```
+struct Huge_Data;
+struct Small_Data;
+
+trait Storage {}
+
+impl Storage for Huge_Data {}
+
+impl Storage for Small_Data {}
+
+fn main() {
+    let data_1 = Huge_Data;
+    let data_2 = Box::new(Huge_Data);
+
+    let data_3 = data_1;
+    let data_4 = data_2; // Only the box pointer is copied when moving ownership of Box
+
+    let data_5 = Box::new(Small_Data);
+
+    let data: Vec<Box<dyn Storage>> = vec![Box::new(data_3), data_4, data_5]; // : Vec<Box<dyn Storage>> is to allow having Box of Huge_Data and Box of Small_Data
+}
+```
 
 ## Deref trait
 * Implementing `Deref` trait allows to customize behavior of the dereferencing operator `*`
