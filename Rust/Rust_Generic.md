@@ -457,6 +457,84 @@ fn main() {
 }
 ```
 
+## Deref trait
+* Implementing `Deref` trait allows to customize behavior of the dereferencing operator `*`
+```
+fn main() {
+    let x = 5;
+    let y = &x; // Reference
+
+    assert_eq!(5, x);
+    assert_eq!(5, *y); // Dereference operator to get the value
+}
+
+fn main() {
+    let x = 5;
+    let y = Box::new(x); // This works the same as a reference even if y is an instance of Box pointing to a copied value of x and not a reference pointing to x
+
+    assert_eq!(5, x);
+    assert_eq!(5, *y);
+}
+```
+* Creating our own `Box` with `Deref`
+```
+struct MyBox<T>(T);
+
+impl<T> MyBox<T> {
+    fn new(x: T) -> MyBox<T> {
+        MyBox(x)
+    }
+}
+
+impl<T> Deref for MyBox<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+```
+* Deref coercion is a mechanism of Rust that allows to convert a reference from one type implementing `Deref` to another
+```
+fn hello(name: &str) {
+    println!("Hello, {name}!");
+}
+
+fn main() {
+    let m = MyBox::new(String::from("Rust"));
+    hello(&m); // Rust calls: MyBox::deref -> &String (which implements Deref) -> String::deref -> &str
+}
+```
+* Rust does deref coercion when it finds types and trait implementations in three cases:
+    * From &T to &U when T: Deref<Target=U>
+    * From &mut T to &mut U when T: DerefMut<Target=U>
+    * From &mut T to &U when T: Deref<Target=U>
+
+## Drop trait
+* `Drop` trait can be implemented to define behavior when a value goes out of scope. It is usefull for example to release resources likes files or network connections
+```
+struct CustomSmartPointer {
+    data: String,
+}
+
+impl Drop for CustomSmartPointer {
+    fn drop(&mut self) {
+        println!("Dropping CustomSmartPointer with data `{}`!", self.data);
+    }
+}
+
+fn main() {
+    let c = CustomSmartPointer {
+        data: String::from("my stuff"),
+    };
+    let d = CustomSmartPointer {
+        data: String::from("other stuff"),
+    };
+    println!("CustomSmartPointers created.");
+}
+```
+* It is not possible to call `drop` manually. If needed, for example to free a lock before going out of scope, call `std::mem::drop`
+
 ## Generic vs Associated type
 * Associated type are linked to trait and trait are used to give behavior to struct
 * Generic are behavior that can be applied to multiple struct

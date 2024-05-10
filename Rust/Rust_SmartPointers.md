@@ -66,84 +66,6 @@ fn main() {
 }
 ```
 
-## Deref trait
-* Implementing `Deref` trait allows to customize behavior of the dereferencing operator `*`
-```
-fn main() {
-    let x = 5;
-    let y = &x; // Reference
-
-    assert_eq!(5, x);
-    assert_eq!(5, *y); // Dereference operator to get the value
-}
-
-fn main() {
-    let x = 5;
-    let y = Box::new(x); // This works the same as a reference even if y is an instance of Box pointing to a copied value of x and not a reference pointing to x
-
-    assert_eq!(5, x);
-    assert_eq!(5, *y);
-}
-```
-* Creating our own `Box` with `Deref`
-```
-struct MyBox<T>(T);
-
-impl<T> MyBox<T> {
-    fn new(x: T) -> MyBox<T> {
-        MyBox(x)
-    }
-}
-
-impl<T> Deref for MyBox<T> {
-    type Target = T;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-```
-* Deref coercion is a mechanism of Rust that allows to convert a reference from one type implementing `Deref` to another
-```
-fn hello(name: &str) {
-    println!("Hello, {name}!");
-}
-
-fn main() {
-    let m = MyBox::new(String::from("Rust"));
-    hello(&m); // Rust calls: MyBox::deref -> &String (which implements Deref) -> String::deref -> &str
-}
-```
-* Rust does deref coercion when it finds types and trait implementations in three cases:
-    * From &T to &U when T: Deref<Target=U>
-    * From &mut T to &mut U when T: DerefMut<Target=U>
-    * From &mut T to &U when T: Deref<Target=U>
-
-## Drop trait
-* `Drop` trait can be implemented to define behavior when a value goes out of scope. It is usefull for example to release resources likes files or network connections
-```
-struct CustomSmartPointer {
-    data: String,
-}
-
-impl Drop for CustomSmartPointer {
-    fn drop(&mut self) {
-        println!("Dropping CustomSmartPointer with data `{}`!", self.data);
-    }
-}
-
-fn main() {
-    let c = CustomSmartPointer {
-        data: String::from("my stuff"),
-    };
-    let d = CustomSmartPointer {
-        data: String::from("other stuff"),
-    };
-    println!("CustomSmartPointers created.");
-}
-```
-* It is not possible to call `drop` manually. If needed, for example to free a lock before going out of scope, call `std::mem::drop`
-
 ## Rc<T> - Reference counted smart pointer
 * An example of use case is for graph. A node that has multiple edge pointing to it has virtually multiple owners and do not have to be dropped until all pointers are cleaned
 * `Rc<T>` is only for single threaded and only immutable references
@@ -195,8 +117,26 @@ fn main() {
 * Note that this smart pointer is for read only share of a value
 * `Rc<T>` count `strong_count` which is the count of strong reference to clean up. Theses references share ownership. It is possible to have weak references that don't share ownership and won't be counted for cleaning. Call `Rc::downgrade` which returns a `Weak<T>` which is a smart pointer. It increases the `weak_count`.
 * To check if value still exists with a weak reference, use `upgrade` which returns `Option<Rc<T>>`
+* `Rc::string_count(&a))` display reference count information of reference `&a`
 
 ## RefCell<T> and the Interior Mutability Pattern
+* `RefCell` enforce borrowing rule at runtime. Example of simple use case
+```
+let mut x = 50;
+let x1 = &x;
+let x2 = &x;
+let x3 = &mut x;
+
+println!("{} {}", x1, x2); // Error because mutable and immutable references at the same time
+
+// Solution
+let a = RefCell::new(10);
+let b = a.borrow();
+let c = a.borrow();
+let d = a.borrow_mut();
+
+println!("{} {}", b, c);
+```
 * This pattern is to mutate data when there are immutable references to it. We have to use `unsafe` code. It tells the compiler that we will manually check the rules
 * With `Box<T>` borrowing rules are at compile time but with `RefCell<T>` rules are at runtime so if a rule is broken, the program will go in panic
 * `RefCell<T>` is for single threaded
@@ -314,10 +254,11 @@ fn main() {
     println!("c after = {:?}", c);
 }
 ```
+* `RefCell` cannot be dereferenced (with `*`, `let b = *a`)
 
 ## Reference cycle causing memory leak
 * It is possible to create reference cycle which can leak memory because values will never be dereferenced.
-* One way to avoid reference cycle, use weak references of `Rc<T>`
+* One way to avoid reference cycle, use weak references of `Rc<T>`. Weak reference do not stop deallocation of memory (call of drop trait) and provides a non owning of memory allocation.
 * Example of creating a tree with strong and weak references of `Rc<T>` and `RefCell<T>`
 ```
 use std::cell::RefCell;

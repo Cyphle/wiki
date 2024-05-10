@@ -40,6 +40,7 @@ let maVariable: u32 = 12
 * When typing a variable can lead to multiple types, like parsing a string, have to add a type annotation `let myVar: u32 = "32".parse...`
 * Rust is multi paradigm
 * Rust use snake case for functions and variables as convention
+* No overloading
 
 ## Debug
 * Struct can print information when debugging. Add `#[derive(Debug)]` and use `{:?}` or `{:#?}` as placeholder
@@ -66,3 +67,148 @@ dbg!(&rect1);
     * `Eq`
     * etc
 * https://doc.rust-lang.org/book/appendix-03-derivable-traits.html#partialord-and-ord-for-ordering-comparisons
+
+## Some usefull patterns
+### Initialization of struct instances
+* Rust convention says that it is good practice to create an initialization function (new)
+```
+pub struct Student {
+    id: u8,
+    pub age: u8,
+    pub name: String,
+}
+
+impl Student {
+    pub fn new(std_name: String) -> Result<Self, String> {
+        if std_name.chars().all(|x| matches!(x, 'a'..='z')) {
+            Of(Self {
+                id: 11,
+                age: 20,
+                name: std_name,
+            })
+        } else {
+            Err("The name is invalid".to_string())
+        }
+    }
+}
+```
+
+### Default constructor
+```
+impl Default for Student {
+    fn default() -> Self {
+        Self {
+            id: 0,
+            age: 20,
+            name: "Unknown".to_string(),
+        }
+    }
+}
+```
+* And use `unwrap_or_default`. Try to unwrap result if err, call default
+```
+let std_1 = Student::new("Joseph123".to_string()).unwrap_or_default();
+println("{:?}", std_1);
+```
+* Or we can use macro `#[derive(Default)]`
+
+### Builder pattern
+```
+#[derive(Debug, Default, Clone)]
+struct Customer {
+    name: String,
+    username: String,
+    membership: Membershiptype,
+    gender: char,
+    counter: String,
+    age: u8,
+}
+
+#[derive(Debug, Clone)]
+enum Membershiptype {
+    new,
+    causual,
+    loyal
+}
+
+impl Default for Membershiptype {
+    fn default() -> Self {
+        Membershiptype::new
+    }
+}
+
+impl Customer {
+    fn new(name: String) -> CustomerBuilder {
+        CustomerBuilder {
+            name: name,
+            ..Default::default()
+        }
+    }
+}
+
+#[derive(Default)]
+struct CustomerBuilder {
+    nae: String,
+    username: Option<String>,
+    membership: Option<Membershiptype>,
+    gender: Option<Char>,
+    country: Option<String>,
+    age: Option<u8>,
+}
+
+impl CustomerBuilder {
+    fn username(&mut self, username: String) -> &mut Self {
+        self.username = Some(username);
+        self
+    }
+
+    fn membership(&mut self, membership: Membershiptype) -> &mut Self {
+        self.membership = Some(membership);
+        self
+    }
+
+    fn gender(&mut self, gender: char) -> &mut Self {
+        self.gender = Some(gender);
+        self
+    }
+
+    fn country(&mut self, country: String) -> &mut Self {
+        self.country = country;
+        self
+    }
+
+    fn age(&mut self, age: u8) -> &mut Self {
+        self.age = age;
+        self
+    }
+
+    fn build(&mut self) -> Customer {
+        Customer {
+            name: self.name.clone(),
+            username: self.username.clone().unwrap_or_default(),
+            membership: self.membership.clone().unwrap_or_default(),
+            gender: self.membership.clone().unwrap_or_default(),
+            country: self.country.clone().unwrap_or_default(),
+            age: self.age.clone().unwrap_or_default(),
+        }
+    }
+}
+```
+
+### Simplifying structs
+* Avoid borrowing of individual fields of a struct especially when mixing by reference and by value
+```
+struct A {
+    f1: u32,
+    f2: u32,
+    f3: u32,
+}
+
+fn fn1(a &mut A) -> &u32 {
+    &a.f1
+}
+
+fn fn2(a &mut A) -> u32 {
+    a.f1 + a.f3
+}
+```
