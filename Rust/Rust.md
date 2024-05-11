@@ -15,6 +15,7 @@
 * [Concurrency & Parallelism](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Concurrency.md)
 * [Macros](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Macros.md)
 * [Unsafe Rust](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Unsafe.md)
+* [Size](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Size.md)
 
 ## Links
 * [Doc](https://www.rust-lang.org)

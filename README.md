@@ -176,6 +176,7 @@ End User
 * [Concurrency & Parallelism](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Concurrency.md)
 * [Macros](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Macros.md)
 * [Unsafe Rust](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Unsafe.md)
+* [Size](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Size.md)
 
 # [Go](https://github.com/Cyphle/wiki/blob/main/Go/Go.md)
 * [Control Flow](https://github.com/Cyphle/wiki/blob/main/Go/Go_ControlFlow.md)
