@@ -213,3 +213,35 @@ fn fn2(a &mut A) -> u32 {
     a.f1 + a.f3
 }
 ```
+
+## as_ref() and partial move in option and result
+```
+fn main() {
+    let some_option: Option<String> = Some("Alice".to_owned());
+
+    match some_option {
+        Some(inner_value: String) => println!("Name is {}", inner_value),
+        None => println!("No name provided"),
+    }
+
+    println("{:?}", some_option); // Error: has been moved in match
+}
+```
+* `as_ref()` uses the reference of the value inside the option
+```
+fn main() {
+    let some_option: Option<String> = Some("Alice".to_owned());
+    let some_1: &Option<String> = &some_options;
+    let some_2: Option<&String> = some_option.as_ref();
+
+    try_me(some_option.as_ref());
+    println!("{:?}", some_option);
+}
+
+fn try_me(option_name: Option<&String>) {
+    match option_name {
+        Some(inner_value: &String) => println!("Name is {}", inner_value),
+        None => prinln!("No name provided!"),
+    }
+}
+```

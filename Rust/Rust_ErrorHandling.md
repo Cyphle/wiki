@@ -83,3 +83,20 @@ fn last_char_of_first_line(text: &str) -> Option<char> {
     text.lines().next()?.chars().last()
 }
 ```
+
+## Question mark operator
+```
+use std::num::ParseIntError;
+
+fn parse_str(input: &str) -> Result<i32, ParseIntError> {
+    let integer = input.parse::<i32>()?;
+
+    println!("the value is {:?} is integer {:?}", input, integer);
+    Ok(integer);
+}
+
+fn main() {
+
+}
+```
+* question mark operator is to propagate error instead of handling the error in place

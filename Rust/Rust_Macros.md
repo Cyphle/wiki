@@ -16,6 +16,37 @@ println!("hello {}", name);
 * Writing macro is more difficult as a macro is writtent in Rust to write Rust
 * You have to bring into scope macros before using it contrary of function
 * Calls with `!`. Example: `println!`. If call function `println`
+* We can call macros with `()` or `{}` or `[]` and parameters can be separated by `,` or `;`
+```
+macro_rules! our_macro {
+    [] => { 1 + 1; };
+    (something 4 u dear u32 @_@) => {
+        println!("You found nonsense here");
+    };
+    ($e1: expr, $e2: expr) => {
+        $e1 + $e2
+    };
+    ($a: expr, $b: expr; $c: expr) => {
+        $a * ($b + $c)
+    };
+}
+
+fn main() {
+    out_macro!();
+    println!("{}", our_macro!());
+
+    our_macro!(something 4 u dear u32 @_@);
+
+    println!("{}", our_macro!(2, 2));
+
+    println!("{}", our_macro!(5, 6; 3));
+}
+```
+* `cargo install cargo-expand` is a tool useful for macros. And use command `cargo expand` which generate macro code to check the correctness
+* Macro arm parameters can be of types (`$x: <Type>`)
+    * `ty` for types like f32
+    * `ident` for variable name
+    * `expr` for an expression like 32
 
 ## Println
 * Positional argument
@@ -53,7 +84,7 @@ macro_rules! vec {
 ```
 * `#[macro_export]` is to tell that every crate that bring the macro into scope can use it
 * Declaring a macro name is without `!`
-* `( $( $x:expr ),* )` is an arm pattern. The macro has only one arm. If there a pattern match then the code after `=>` will be emitted
+* `( $( $x:expr ),* )` is an arm pattern. The macro has only one arm. If there a pattern match then the code after `=>` will be emitted. It may have multiple arms
 * Pattern matching in macro are against Rust and not values so it different. For list of pattern matching of macro: [macro pattern matching](https://doc.rust-lang.org/reference/macros-by-example.html)
 * First `()` to encompass the pattern
 * Second we have `$` which declares a variable for the pattern
@@ -187,3 +218,57 @@ pub fn route(attr: TokenStream, item: TokenStream) -> TokenStream {
 #[proc_macro]
 pub fn sql(input: TokenStream) -> TokenStream {
 ```
+
+## Capturing types
+```
+macro_rules! input {
+    ($t: ty) => {
+        {
+            let mut n = String::new();
+            std::io::stdin()
+                .read_line(&mut n)
+                .expect("failed to read input");
+
+            let n: $t = n.trim().parse.expect("invalid input");
+            n
+        }
+    }
+}
+
+macro_rules! add_as {
+    ($a: expr, $b: expr, $typ: ty) => {
+        $a as $typ + $b as $typ
+    }
+}
+
+fn main() {
+    println!("Please enter a floating point number");
+    let some_input = input!(f32);
+
+    println!("{}", add_as!(12, 2.3, f32));
+}
+```
+* We needed to add additional scope `{ }` for `input` macro because it is the scope of the method and the outer brackets are the scope of macro substitution.
+
+## Repeating patterns
+* Example with macro that concatenate strings
+```
+macro_rules! string_concat {
+    () => {
+        String::new();
+    };
+
+    ($($some_str: expr),*) => {{
+        let mut temp_str = String::new();
+        $(temp_str.push_str($some_str);)*
+        temp_str
+    }}
+}
+
+fn main() {
+    let str_null = string_concat!();
+    let str_single = string_concat!("First");
+}
+```
+* `,` is the delimiter in `($($some_str: expr),*)`
+* If we write `($($some_str: expr,) *)` then the `,` is part of the expression and not the delimiter which is now a space
