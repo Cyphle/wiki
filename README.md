@@ -177,6 +177,7 @@ End User
 * [Macros](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Macros.md)
 * [Unsafe Rust](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Unsafe.md)
 * [Size](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_Size.md)
+* [Web programming](https://github.com/Cyphle/wiki/blob/main/Rust/Rust_WebProgramming.md)
 
 # [Go](https://github.com/Cyphle/wiki/blob/main/Go/Go.md)
 * [Control Flow](https://github.com/Cyphle/wiki/blob/main/Go/Go_ControlFlow.md)
