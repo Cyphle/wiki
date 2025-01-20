@@ -1,9 +1,9 @@
+# AMI
+
 # What are AMI
 
-Pour Amazon Machine Image.
+AMI, Amazon Machine Image, are virtual machines (VM) images. They are used to be deployed on servers such as AWS EC2.
 
-Ce sont des images de VM.
+It is possible to create our own AMI.
 
-# Notes
-* Specific to region
-* Can be copied accross region	
+The AMI are specific to regions (an AMI in region cannot be found in another region). But they can be copied accross regions.
